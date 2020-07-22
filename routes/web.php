@@ -14,3 +14,24 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+$router->get(
+    '/node/{id}',
+    'ActionNodeController@read'
+);
+
+
+$router->post(
+    '/node',
+    'ActionNodeController@create'
+);
+
+$router->patch(
+    '/node/{id}',
+    'ActionNodeController@edit'
+);
+
+$router->patch(
+    '/node/{id}',
+    'ActionNodeController@delete'
+);
