@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateActionNodeOptionsTable extends Migration
+class CreateStoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreateActionNodeOptionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('action_node_options', function (Blueprint $table) {
+        Schema::create('stories', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('story_id');
+            $table->bigInteger('node_id');
+            $table->boolean('initial_node');
+            $table->boolean('final_node');
             $table->timestamps();
-            $table->bigInteger('node_id')->unsigned();
-            $table->foreign('node_id')->references('id')->on('action_nodes');
-            $table->integer('description_id');
         });
     }
 
@@ -29,6 +30,6 @@ class CreateActionNodeOptionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('action_node_options');
+        Schema::dropIfExists('stories');
     }
 }
