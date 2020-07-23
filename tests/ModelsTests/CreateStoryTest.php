@@ -2,6 +2,7 @@
 
 use App\Story;
 use App\ActionNode;
+use App\ActionNodeOption;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\DB;
 
@@ -87,5 +88,27 @@ class CreateStoryTest extends TestCase
         $this->assertEquals('example description', $description->description);
         $this->assertEquals($descriptions[0]->id, $savedFirstNode->description_id);
         $this->assertEquals($descriptions[1]->id, $savedFirstNode->title_id);
+    }
+
+    public function testOptionsForNode()
+    {
+        $actionNode = new ActionNode();
+        $actionNode->save();
+        $option1 = new ActionNodeOption(['node_id' => $actionNode->id]);
+        $option2 = new ActionNodeOption(['node_id' => $actionNode->id]);
+        $option3 = new ActionNodeOption(['node_id' => $actionNode->id]);
+        $option1->save();
+        $option2->save();
+        $option3->save();
+        $savedOptions = ActionNodeOption::where('node_id', $actionNode->id)->get();
+        foreach ($savedOptions as $el) {
+            $this->assertEquals($actionNode->id, $el->node_id);
+        }
+        $this->assertEquals(3, count($savedOptions));
+    }
+
+    public function testOptionsNodeMappings()
+    {
+        $this->assertTrue(true);
     }
 }
