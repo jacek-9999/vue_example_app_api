@@ -156,10 +156,14 @@ class CreateStoryTest extends TestCase
         DB::insert($storiesInsert, [$finalNode->id,]);
 
         $descriptionsText = [
-            'you win 100 gold',
-            'you meet a nice girl',
-            'you find magic wand which shoots with fireballs'];
-        $titlesText = ['a', 'b', 'c'];
+            'desc first lvl A',
+            'desc first lvl B',
+            'desc first lvl C'];
+        $titlesText = [
+            'title first lvl A',
+            'title first lvl B',
+            'title first lvl C'
+        ];
 
         /*
          *  Creating first level nodes (attached to initial node as option by mapping) in loop and add it to story.
@@ -194,23 +198,23 @@ class CreateStoryTest extends TestCase
         }
 
         $descriptionsTextSecondLevel = [
-            'desc sec lvl 1',
-            'desc sec lvl 2',
-            'desc sec lvl 3',
-            'desc sec lvl 4',
-            'desc sec lvl 5',
-            'desc sec lvl 6'
+            'desc sec lvl A',
+            'desc sec lvl B',
+            'desc sec lvl C',
+            'desc sec lvl D',
+            'desc sec lvl E',
+            'desc sec lvl F'
         ];
         $titlesTextSecondLevel = [
-            'title sec lvl 1',
-            'title sec lvl 2',
-            'title sec lvl 3',
-            'title sec lvl 4',
-            'title sec lvl 5',
-            'title sec lvl 6'
+            'title sec lvl A',
+            'title sec lvl B',
+            'title sec lvl C',
+            'title sec lvl D',
+            'title sec lvl E',
+            'title sec lvl F'
         ];
         $secondLevelNodes = [];
-        $variants = ['A', 'B'];
+        $variants = ['_variant_1', '_variant_2'];
         /*
          * Generating second level of nodes. Two nodes for any node from first level.
          */
@@ -270,5 +274,10 @@ class CreateStoryTest extends TestCase
          * 3 + 6 + 12 = 21
          */
         $this->assertEquals(21, ActionNodeOption::all()->count());
+
+        /*
+         * Number of options is equal to number of mappings.
+         */
+        $this->assertEquals(ActionNodeOption::all()->count(), ActionNodeMapping::all()->count());
     }
 }
