@@ -26,6 +26,10 @@ class CreateStoryTest extends TestCase
         $secondNode->save();
         $thirdNode = new ActionNode();
         $thirdNode->save();
+        /*
+         * Story will be handled by custom service instead of Eloquent.
+         * Id will be added by this service.
+         */
         $storyId = 2;
         $q = "insert into stories (story_id, node_id) VALUE ($storyId,?), ($storyId,?), ($storyId,?)";
         DB::insert(
@@ -125,5 +129,146 @@ class CreateStoryTest extends TestCase
         $savedMapping = ActionNodeMapping::where('id', $mapping->id)->first();
         $this->assertEquals($targetNode->id, $savedMapping->goto_id);
         $this->assertEquals($option1->id, $savedMapping->option_id);
+    }
+
+    public function testFullProcess()
+    {
+        $storyId = 2;
+        $storiesInsert = "insert into stories (story_id, node_id) VALUE ($storyId,?)";
+        $initialNodeTitleID = DB::table('descriptions_pl')
+            ->insertGetId(['description' => 'initial node title']);
+        $initialNodeDescID = DB::table('descriptions_pl')
+            ->insertGetId(['description' => 'initial node description']);
+        $finalNodeTitleID = DB::table('descriptions_pl')
+            ->insertGetId(['description' => 'final node title']);
+        $finalNodeDescID = DB::table('descriptions_pl')
+            ->insertGetId(['description' => 'final node description']);
+
+        $initialNode = new ActionNode();
+        $initialNode->title_id = $initialNodeTitleID;
+        $initialNode->description_id = $initialNodeDescID;
+        $initialNode->save();
+        DB::insert($storiesInsert, [$initialNode->id,]);
+        $finalNode = new ActionNode();
+        $finalNode->title_id = $finalNodeTitleID;
+        $finalNode->description_id = $finalNodeDescID;
+        $finalNode->save();
+        DB::insert($storiesInsert, [$finalNode->id,]);
+
+        $descriptionsText = [
+            'you win 100 gold',
+            'you meet a nice girl',
+            'you find magic wand which shoots with fireballs'];
+        $titlesText = ['a', 'b', 'c'];
+
+        /*
+         *  Creating first level nodes (attached to initial node as option by mapping) in loop and add it to story.
+         */
+        $firstLevelNodes = [];
+        for ($i = 0; $i < 3; $i++) {
+            $currentNode = new ActionNode();
+            $createdDescId = DB::table('descriptions_pl')
+                ->insertGetId(['description' => $descriptionsText[$i]]);
+            $currentNode->description_id = $createdDescId;
+            $createdTitleId = DB::table('descriptions_pl')
+                ->insertGetId(['description' => $titlesText[$i]]);
+            $currentNode->title_id = $createdTitleId;
+            $currentNode->save();
+            array_push($firstLevelNodes, $currentNode->id);
+            /*
+             * New option for initial node.
+             */
+            $option = new ActionNodeOption(['node_id' => $initialNode->id]);
+            $option->save();
+
+            /*
+             * Map previous created option to current node.
+             */
+            $mapping = new ActionNodeMapping([
+                'goto_id' => $currentNode->id,
+                'option_id' => $option->id
+            ]);
+            $mapping->save();
+
+            DB::insert($storiesInsert, [$currentNode->id,]);
+        }
+
+        $descriptionsTextSecondLevel = [
+            'desc sec lvl 1',
+            'desc sec lvl 2',
+            'desc sec lvl 3',
+            'desc sec lvl 4',
+            'desc sec lvl 5',
+            'desc sec lvl 6'
+        ];
+        $titlesTextSecondLevel = [
+            'title sec lvl 1',
+            'title sec lvl 2',
+            'title sec lvl 3',
+            'title sec lvl 4',
+            'title sec lvl 5',
+            'title sec lvl 6'
+        ];
+        $secondLevelNodes = [];
+        $variants = ['A', 'B'];
+        /*
+         * Generating second level of nodes. Two nodes for any node from first level.
+         */
+        foreach ($firstLevelNodes as $k => $firstLevelNodeID) {
+            foreach ($variants as $variant) {
+                $currentNode = new ActionNode();
+                $createdDescId = DB::table('descriptions_pl')
+                    ->insertGetId(['description' => $descriptionsTextSecondLevel[$k] . $variant]);
+                $currentNode->description_id = $createdDescId;
+                $createdTitleId = DB::table('descriptions_pl')
+                    ->insertGetId(['description' => $titlesTextSecondLevel[$k] . $variant]);
+                $currentNode->title_id = $createdTitleId;
+                $currentNode->save();
+                array_push($secondLevelNodes, $currentNode->id);
+                /*
+                 * New option for first level node.
+                 */
+                $option = new ActionNodeOption(['node_id' => $firstLevelNodeID]);
+                $option->save();
+
+                /*
+                 * Map previous created option to current node.
+                 */
+                $mapping = new ActionNodeMapping([
+                    'goto_id' => $currentNode->id,
+                    'option_id' => $option->id
+                ]);
+                $mapping->save();
+                // creating option and mappings to next nodes from current
+                $optionA = new ActionNodeOption(['node_id' => $currentNode->id]);
+                $optionA->save();
+                $mappingA = new ActionNodeMapping([
+                    'goto_id' => $finalNode->id,
+                    'option_id' => $optionA->id
+                ]);
+                $mappingA->save();
+                $optionB = new ActionNodeOption(['node_id' => $currentNode->id]);
+                $optionB->save();
+                $mappingB = new ActionNodeMapping([
+                    'goto_id' => $initialNode->id,
+                    'option_id' => $optionB->id
+                ]);
+                $mappingB->save();
+
+                DB::insert($storiesInsert, [$currentNode->id,]);
+            }
+        }
+        /*
+         * 1 initial + 3 first level + 6 second level + 1 final = 11
+         */
+        $this->assertEquals(11, ActionNode::all()->count());
+
+        /*
+         * 3 options from first node +
+         * 3 * 2 options for first level nodes +
+         * 6 * 2 options for second level nodes =
+         * 3 + 6 + 12 = 21
+         */
+        $this->assertEquals(21, ActionNodeOption::all()->count());
     }
 }
