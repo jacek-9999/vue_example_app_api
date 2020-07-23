@@ -3,6 +3,7 @@
 use App\Story;
 use App\ActionNode;
 use App\ActionNodeOption;
+use App\ActionNodeMapping;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\DB;
 
@@ -109,6 +110,20 @@ class CreateStoryTest extends TestCase
 
     public function testOptionsNodeMappings()
     {
-        $this->assertTrue(true);
+        $baseNode = new ActionNode();
+        $baseNode->save();
+        $targetNode = new ActionNode();
+        $targetNode->save();
+        $option1 = new ActionNodeOption(['node_id' => $baseNode->id]);
+        $option1->save();
+        $mapping = new ActionNodeMapping([
+            'goto_id' => $targetNode->id,
+            'option_id' => $option1->id
+        ]);
+        $mapping->save();
+
+        $savedMapping = ActionNodeMapping::where('id', $mapping->id)->first();
+        $this->assertEquals($targetNode->id, $savedMapping->goto_id);
+        $this->assertEquals($option1->id, $savedMapping->option_id);
     }
 }
