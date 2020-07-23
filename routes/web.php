@@ -10,28 +10,29 @@
 | and give it the Closure to call when that URI is requested.
 |
 */
+$router->group(['middleware' => 'cors'], function () use ($router) {
+    $router->get('/', function () use ($router) {
+        return $router->app->version();
+    });
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
+    $router->get(
+        '/node/{id}',
+        'ActionNodeController@read'
+    );
+
+
+    $router->post(
+        '/node',
+        'ActionNodeController@create'
+    );
+
+    $router->patch(
+        '/node/{id}',
+        'ActionNodeController@edit'
+    );
+
+    $router->patch(
+        '/node/{id}',
+        'ActionNodeController@delete'
+    );
 });
-
-$router->get(
-    '/node/{id}',
-    'ActionNodeController@read'
-);
-
-
-$router->post(
-    '/node',
-    'ActionNodeController@create'
-);
-
-$router->patch(
-    '/node/{id}',
-    'ActionNodeController@edit'
-);
-
-$router->patch(
-    '/node/{id}',
-    'ActionNodeController@delete'
-);
