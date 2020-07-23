@@ -16,9 +16,9 @@ class CreateStoriesTable extends Migration
         Schema::create('stories', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('story_id');
-            $table->bigInteger('node_id');
-            $table->boolean('initial_node');
-            $table->boolean('final_node');
+            $table->bigInteger('node_id')->nullable();
+            $table->boolean('initial_node')->default(false);
+            $table->boolean('final_node')->default(false);
             $table->timestamps();
         });
     }
