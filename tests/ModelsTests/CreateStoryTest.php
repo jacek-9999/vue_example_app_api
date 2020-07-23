@@ -279,5 +279,52 @@ class CreateStoryTest extends TestCase
          * Number of options is equal to number of mappings.
          */
         $this->assertEquals(ActionNodeOption::all()->count(), ActionNodeMapping::all()->count());
+
+        /*
+         * Test traversing nodes, intentionally without recursion for testing purposes.
+         */
+        foreach ($initialNode->getOptions() as $optionL1) {
+            $this->assertTrue(in_array($optionL1->id, [1, 2, 3]));
+            $mappingL1 = $optionL1->getMapping();
+            $this->assertTrue(in_array($mappingL1->goto_id, [3,4,5]));
+            $mappedNodeL1 = $mappingL1->getMappedNode();
+            $this->assertTrue(in_array(
+                $mappedNodeL1->getDescription(),
+                ['desc first lvl A',
+                 'desc first lvl B',
+                 'desc first lvl C']
+            ));
+            foreach ($mappedNodeL1->getOptions() as $optionL2) {
+                $this->assertTrue(in_array($optionL2->id, [4,7,10,13,16,19]));
+                $mappingL2 = $optionL2->getMapping();
+                $this->assertTrue(in_array($mappingL2->goto_id, [6,7,8,9,10,11]));
+                $mappedNodeL2 = $mappingL2->getMappedNode();
+                $this->assertTrue(in_array(
+                    $mappedNodeL2->getDescription(),
+                    ['desc sec lvl A_variant_1',
+                     'desc sec lvl A_variant_2',
+                     'desc sec lvl B_variant_1',
+                     'desc sec lvl B_variant_2',
+                     'desc sec lvl C_variant_1',
+                     'desc sec lvl C_variant_2']
+                ));
+                foreach ($mappedNodeL2->getOptions() as $optionL3) {
+                    $this->assertTrue(in_array($optionL3->id, [5,6,8,9,11,12,14,15,17,18,20,21]));
+                    $mappingL3 = $optionL3->getMapping();
+                    /*
+                     * Last level nodes in this test are mapped to final or first node.
+                     * So there are only two options here.
+                     */
+                    $this->assertTrue(in_array($mappingL3->goto_id, [1,2]));
+                    $mappedNodeL3 = $mappingL3->getMappedNode();
+                    $this->assertTrue(in_array(
+                        $mappedNodeL3->getDescription(),
+                        ['initial node description',
+                         'final node description']
+                    ));
+                }
+            }
+        }
+        $this->assertTrue(true);
     }
 }

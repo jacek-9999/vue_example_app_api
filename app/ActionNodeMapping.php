@@ -2,14 +2,8 @@
 
 namespace App;
 
-use Illuminate\Auth\Authenticatable;
-use Illuminate\Database\Eloquent\Model;
-use Laravel\Lumen\Auth\Authorizable;
-
-class ActionNodeMapping extends Model
+class ActionNodeMapping extends BaseAction
 {
-    use Authenticatable, Authorizable;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -26,4 +20,9 @@ class ActionNodeMapping extends Model
      */
     protected $hidden = [
     ];
+
+    public function getMappedNode()
+    {
+        return ActionNode::where('id', $this->goto_id)->first();
+    }
 }

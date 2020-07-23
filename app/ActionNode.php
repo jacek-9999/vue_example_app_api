@@ -2,14 +2,11 @@
 
 namespace App;
 
-use Illuminate\Auth\Authenticatable;
-use Illuminate\Database\Eloquent\Model;
-use Laravel\Lumen\Auth\Authorizable;
+use Illuminate\Support\Facades\DB;
+use App\ActionNodeOption;
 
-class ActionNode extends Model
+class ActionNode extends BaseAction
 {
-    use Authenticatable, Authorizable;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -26,4 +23,16 @@ class ActionNode extends Model
      */
     protected $hidden = [
     ];
+
+    public function getOptions(): object
+    {
+        return ActionNodeOption::where('node_id', $this->id)->get();
+    }
+
+    public function getTitle(): string
+    {
+        return DB::table($this->textTable)
+            ->select('description')
+            ->where('id', $this->title_id);
+    }
 }
