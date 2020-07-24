@@ -220,6 +220,5 @@ class CreateStoryTest extends TestCase
         $this->assertEquals(1, $stories->count());
         $this->assertEquals('initial node title', $stories->first()->getTitle());
         $this->assertEquals('initial node description', $stories->first()->getDescription());
-        $this->assertTrue(true);
     }
 }
