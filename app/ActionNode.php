@@ -26,13 +26,27 @@ class ActionNode extends BaseAction
 
     public function getOptions(): object
     {
+        /*
+         * that assertion should be checked when trying to make mapping take place,
+         * but now we check this after mapping is created
+         */
+        if ($this->is_final) {
+            throw new \Exception('getting options from final node');
+        }
         return ActionNodeOption::where('node_id', $this->id)->get();
     }
 
     public function getTitle(): string
     {
-        return DB::table($this->textTable)
+        $out = DB::table($this->textTable)
             ->select('description')
-            ->where('id', $this->title_id);
+            ->where('id', $this->title_id)
+            ->first();
+        return $out->description ?? '';
+    }
+
+    public static function getStories()
+    {
+        return ActionNode::where('is_initial', true)->get();
     }
 }

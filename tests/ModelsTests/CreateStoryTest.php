@@ -98,6 +98,7 @@ class CreateStoryTest extends TestCase
         $initialNode = new ActionNode();
         $initialNode->title_id = $initialNodeTitleID;
         $initialNode->description_id = $initialNodeDescID;
+        $initialNode->is_initial = true;
         $initialNode->save();
         $finalNode = new ActionNode();
         $finalNode->title_id = $finalNodeTitleID;
@@ -270,6 +271,10 @@ class CreateStoryTest extends TestCase
                 }
             }
         }
+        $stories = ActionNode::getStories();
+        $this->assertEquals(1, $stories->count());
+        $this->assertEquals('initial node title', $stories->first()->getTitle());
+        $this->assertEquals('initial node description', $stories->first()->getDescription());
         $this->assertTrue(true);
     }
 }
