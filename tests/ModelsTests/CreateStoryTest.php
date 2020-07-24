@@ -222,23 +222,4 @@ class CreateStoryTest extends TestCase
         $this->assertEquals('initial node title', $stories->first()->getTitle());
         $this->assertEquals('initial node description', $stories->first()->getDescription());
     }
-
-    public function testApiMethod()
-    {
-        $actionNodeData = json_encode([
-            'title'=> 'test title request',
-            'description' => 'test desc request'
-        ]);
-        $response = $this
-            ->call(
-                'POST',
-                'node', [], [], [],
-                ['CONTENT_TYPE' => 'application/json'],
-                $actionNodeData
-            );
-        // @todo: test returns with linked text and options
-        $this->assertEquals('{"id":1}', $response->content());
-        $response = $this->call('GET', 'node/1', ['CONTENT_TYPE' => 'application/json']);
-        $this->assertEquals('{"received_id":"1"}', $response->content());
-    }
 }
