@@ -80,6 +80,7 @@ class CreateStoryTest extends TestCase
         $finalNode = new ActionNode([
             'title' => 'final node title',
             'description' => 'final node description']);
+        $finalNode->is_final = true;
         $finalNode->save();
 
         $descriptionsText = [
@@ -220,5 +221,22 @@ class CreateStoryTest extends TestCase
         $this->assertEquals(1, $stories->count());
         $this->assertEquals('initial node title', $stories->first()->getTitle());
         $this->assertEquals('initial node description', $stories->first()->getDescription());
+    }
+
+    public function testApiMethod()
+    {
+        $actionNodeData = json_encode([
+            'title'=> 'test title request',
+            'description' => 'test desc request'
+        ]);
+        $response = $this
+            ->call(
+                'POST',
+                'node', [], [], [],
+                ['CONTENT_TYPE' => 'application/json'],
+                $actionNodeData
+            );
+        // @todo: test returns with linked text and options
+        $this->assertEquals('{"id":1}', $response->content());
     }
 }

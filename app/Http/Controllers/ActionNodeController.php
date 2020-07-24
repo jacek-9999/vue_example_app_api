@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\ActionNode;
 use Illuminate\Http\Request;
 
 class ActionNodeController extends Controller
@@ -23,7 +23,11 @@ class ActionNodeController extends Controller
 
     public function create(Request $request)
     {
-
+        $node = new ActionNode([
+            'title' => $request->input('title'),
+            'description' => $request->input('description')]);
+        $node->save();
+        return response()->json($node->only('id'));
     }
 
     public function edit($id, Request $request)
