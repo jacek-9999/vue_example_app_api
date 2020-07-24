@@ -50,6 +50,15 @@ class ActionNode extends BaseAction
         return $option->id;
     }
 
+    public function setAsTarget($optionId): void
+    {
+        $mapping = new ActionNodeMapping([
+            'goto_id' => $this->id,
+            'option_id' => $optionId
+        ]);
+        $mapping->save();
+    }
+
     public function getOptions(): object
     {
         /*

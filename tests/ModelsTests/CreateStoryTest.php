@@ -63,13 +63,9 @@ class CreateStoryTest extends TestCase
         $targetNode = new ActionNode();
         $targetNode->save();
         $option1 = $baseNode->addOption();
-        $mapping = new ActionNodeMapping([
-            'goto_id' => $targetNode->id,
-            'option_id' => $option1
-        ]);
-        $mapping->save();
+        $targetNode->setAsTarget($option1);
 
-        $savedMapping = ActionNodeMapping::where('id', $mapping->id)->first();
+        $savedMapping = ActionNodeMapping::where('option_id', $option1)->first();
         $this->assertEquals($targetNode->id, $savedMapping->goto_id);
         $this->assertEquals($option1, $savedMapping->option_id);
     }
@@ -108,17 +104,9 @@ class CreateStoryTest extends TestCase
             $currentNode->save();
             array_push($firstLevelNodes, $currentNode->id);
             /*
-             * New option for initial node.
+             * Map  initialNode option to current node.
              */
-            $option = $initialNode->addOption();
-            /*
-             * Map previous created option to current node.
-             */
-            $mapping = new ActionNodeMapping([
-                'goto_id' => $currentNode->id,
-                'option_id' => $option
-            ]);
-            $mapping->save();
+            $currentNode->setAsTarget($initialNode->addOption());
         }
 
         $descriptionsTextSecondLevel = [
@@ -159,24 +147,10 @@ class CreateStoryTest extends TestCase
                 /*
                  * Map previous created option to current node.
                  */
-                $mapping = new ActionNodeMapping([
-                    'goto_id' => $currentNode->id,
-                    'option_id' => $optionId
-                ]);
-                $mapping->save();
+                $currentNode->setAsTarget($optionId);
                 // creating option and mappings to next nodes from current
-                $optionA = $currentNode->addOption();
-                $mappingA = new ActionNodeMapping([
-                    'goto_id' => $finalNode->id,
-                    'option_id' => $optionA
-                ]);
-                $mappingA->save();
-                $optionB = $currentNode->addOption();
-                $mappingB = new ActionNodeMapping([
-                    'goto_id' => $initialNode->id,
-                    'option_id' => $optionB
-                ]);
-                $mappingB->save();
+                $finalNode->setAsTarget($currentNode->addOption());
+                $initialNode->setAsTarget($currentNode->addOption());
             }
         }
         /*
