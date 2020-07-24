@@ -12,14 +12,10 @@ class CreateStoryTest extends TestCase
 
     public function testTextToNode()
     {
-        $q = "insert into descriptions_pl (description) VALUE (?)";
-        DB::insert($q, ['example description']);
-        DB::insert($q, ['example title']);
-        $descriptions = DB::select("select * from descriptions_pl");
-
-        $firstNode = new ActionNode();
-        $firstNode->description_id = $descriptions[0]->id;
-        $firstNode->title_id = $descriptions[1]->id;
+        $firstNode = new ActionNode([
+            'title' => 'example title',
+            'description' => 'example description'
+        ]);
         $firstNode->save();
 
         $savedFirstNode = ActionNode::where('id', $firstNode->id)->first();
@@ -44,20 +40,15 @@ class CreateStoryTest extends TestCase
             ->first();
         $this->assertEquals('example title', $title->description);
         $this->assertEquals('example description', $description->description);
-        $this->assertEquals($descriptions[0]->id, $savedFirstNode->description_id);
-        $this->assertEquals($descriptions[1]->id, $savedFirstNode->title_id);
     }
 
     public function testOptionsForNode()
     {
         $actionNode = new ActionNode();
         $actionNode->save();
-        $option1 = new ActionNodeOption(['node_id' => $actionNode->id]);
-        $option2 = new ActionNodeOption(['node_id' => $actionNode->id]);
-        $option3 = new ActionNodeOption(['node_id' => $actionNode->id]);
-        $option1->save();
-        $option2->save();
-        $option3->save();
+        $actionNode->addOption();
+        $actionNode->addOption();
+        $actionNode->addOption();
         $savedOptions = ActionNodeOption::where('node_id', $actionNode->id)->get();
         foreach ($savedOptions as $el) {
             $this->assertEquals($actionNode->id, $el->node_id);
@@ -71,17 +62,16 @@ class CreateStoryTest extends TestCase
         $baseNode->save();
         $targetNode = new ActionNode();
         $targetNode->save();
-        $option1 = new ActionNodeOption(['node_id' => $baseNode->id]);
-        $option1->save();
+        $option1 = $baseNode->addOption();
         $mapping = new ActionNodeMapping([
             'goto_id' => $targetNode->id,
-            'option_id' => $option1->id
+            'option_id' => $option1
         ]);
         $mapping->save();
 
         $savedMapping = ActionNodeMapping::where('id', $mapping->id)->first();
         $this->assertEquals($targetNode->id, $savedMapping->goto_id);
-        $this->assertEquals($option1->id, $savedMapping->option_id);
+        $this->assertEquals($option1, $savedMapping->option_id);
     }
 
     public function testFullProcess()
@@ -120,15 +110,13 @@ class CreateStoryTest extends TestCase
             /*
              * New option for initial node.
              */
-            $option = new ActionNodeOption(['node_id' => $initialNode->id]);
-            $option->save();
-
+            $option = $initialNode->addOption();
             /*
              * Map previous created option to current node.
              */
             $mapping = new ActionNodeMapping([
                 'goto_id' => $currentNode->id,
-                'option_id' => $option->id
+                'option_id' => $option
             ]);
             $mapping->save();
         }
@@ -165,30 +153,28 @@ class CreateStoryTest extends TestCase
                 /*
                  * New option for first level node.
                  */
-                $option = new ActionNodeOption(['node_id' => $firstLevelNodeID]);
-                $option->save();
-
+                $optionId = ActionNode::where('id', $firstLevelNodeID)
+                    ->first()
+                    ->addOption();
                 /*
                  * Map previous created option to current node.
                  */
                 $mapping = new ActionNodeMapping([
                     'goto_id' => $currentNode->id,
-                    'option_id' => $option->id
+                    'option_id' => $optionId
                 ]);
                 $mapping->save();
                 // creating option and mappings to next nodes from current
-                $optionA = new ActionNodeOption(['node_id' => $currentNode->id]);
-                $optionA->save();
+                $optionA = $currentNode->addOption();
                 $mappingA = new ActionNodeMapping([
                     'goto_id' => $finalNode->id,
-                    'option_id' => $optionA->id
+                    'option_id' => $optionA
                 ]);
                 $mappingA->save();
-                $optionB = new ActionNodeOption(['node_id' => $currentNode->id]);
-                $optionB->save();
+                $optionB = $currentNode->addOption();
                 $mappingB = new ActionNodeMapping([
                     'goto_id' => $initialNode->id,
-                    'option_id' => $optionB->id
+                    'option_id' => $optionB
                 ]);
                 $mappingB->save();
             }
