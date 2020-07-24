@@ -111,13 +111,10 @@ class CreateStoryTest extends TestCase
          */
         $firstLevelNodes = [];
         for ($i = 0; $i < 3; $i++) {
-            $currentNode = new ActionNode();
-            $createdDescId = DB::table('descriptions_pl')
-                ->insertGetId(['description' => $descriptionsText[$i]]);
-            $currentNode->description_id = $createdDescId;
-            $createdTitleId = DB::table('descriptions_pl')
-                ->insertGetId(['description' => $titlesText[$i]]);
-            $currentNode->title_id = $createdTitleId;
+            $currentNode = new ActionNode([
+                'title' => $titlesText[$i],
+                'description' => $descriptionsText[$i]
+            ]);
             $currentNode->save();
             array_push($firstLevelNodes, $currentNode->id);
             /*
@@ -159,13 +156,10 @@ class CreateStoryTest extends TestCase
          */
         foreach ($firstLevelNodes as $k => $firstLevelNodeID) {
             foreach ($variants as $variant) {
-                $currentNode = new ActionNode();
-                $createdDescId = DB::table('descriptions_pl')
-                    ->insertGetId(['description' => $descriptionsTextSecondLevel[$k] . $variant]);
-                $currentNode->description_id = $createdDescId;
-                $createdTitleId = DB::table('descriptions_pl')
-                    ->insertGetId(['description' => $titlesTextSecondLevel[$k] . $variant]);
-                $currentNode->title_id = $createdTitleId;
+                $currentNode = new ActionNode([
+                    'title' => $titlesTextSecondLevel[$k] . $variant,
+                    'description' => $descriptionsTextSecondLevel[$k] . $variant
+                ]);
                 $currentNode->save();
                 array_push($secondLevelNodes, $currentNode->id);
                 /*
