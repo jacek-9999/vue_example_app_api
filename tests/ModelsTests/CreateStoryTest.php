@@ -238,5 +238,7 @@ class CreateStoryTest extends TestCase
             );
         // @todo: test returns with linked text and options
         $this->assertEquals('{"id":1}', $response->content());
+        $response = $this->call('GET', 'node/1', ['CONTENT_TYPE' => 'application/json']);
+        $this->assertEquals('{"received_id":"1"}', $response->content());
     }
 }
