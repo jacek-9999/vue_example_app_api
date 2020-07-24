@@ -86,23 +86,14 @@ class CreateStoryTest extends TestCase
 
     public function testFullProcess()
     {
-        $initialNodeTitleID = DB::table('descriptions_pl')
-            ->insertGetId(['description' => 'initial node title']);
-        $initialNodeDescID = DB::table('descriptions_pl')
-            ->insertGetId(['description' => 'initial node description']);
-        $finalNodeTitleID = DB::table('descriptions_pl')
-            ->insertGetId(['description' => 'final node title']);
-        $finalNodeDescID = DB::table('descriptions_pl')
-            ->insertGetId(['description' => 'final node description']);
-
-        $initialNode = new ActionNode();
-        $initialNode->title_id = $initialNodeTitleID;
-        $initialNode->description_id = $initialNodeDescID;
+        $initialNode = new ActionNode([
+            'title' => 'initial node title',
+            'description' => 'initial node description']);
         $initialNode->is_initial = true;
         $initialNode->save();
-        $finalNode = new ActionNode();
-        $finalNode->title_id = $finalNodeTitleID;
-        $finalNode->description_id = $finalNodeDescID;
+        $finalNode = new ActionNode([
+            'title' => 'final node title',
+            'description' => 'final node description']);
         $finalNode->save();
 
         $descriptionsText = [

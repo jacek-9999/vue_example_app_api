@@ -24,6 +24,25 @@ class ActionNode extends BaseAction
     protected $hidden = [
     ];
 
+    public function __construct(array $attributes = array())
+    {
+        if (isset($attributes['title'])) {
+           $initialNodeTitleID = DB::table('descriptions_pl')
+            ->insertGetId(['description' => $attributes['title']]);
+           unset($attributes['title']);
+           $attributes['title_id'] = $initialNodeTitleID;
+        }
+
+        if (isset($attributes['description'])) {
+           $initialNodeDescriptionID = DB::table('descriptions_pl')
+            ->insertGetId(['description' => $attributes['description']]);
+            unset($attributes['description']);
+           $attributes['description_id'] = $initialNodeDescriptionID;
+        }
+
+        parent::__construct($attributes);
+    }
+
     public function getOptions(): object
     {
         /*
