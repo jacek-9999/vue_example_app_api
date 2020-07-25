@@ -48,7 +48,8 @@ class DatabaseSeeder extends Seeder
            'title' => $faker->sentence(4),
            'description' => $faker->sentence(20),
            'is_initial' => $initial,
-           'is_final' => $final
+           'is_final' => $final,
+           'story_id' => 1
        ]);
        $n->save();
        return $n;
