@@ -14,7 +14,8 @@ class ApiTest extends TestCase
     {
         $actionNodeData = json_encode([
             'title'=> 'test title request',
-            'description' => 'test desc request'
+            'description' => 'test desc request',
+            'story_id' => 1
         ]);
         $response = $this
             ->call(
@@ -36,7 +37,8 @@ class ApiTest extends TestCase
         // create node first
         $actionNodeData = json_encode([
             'title'=> 'test add option title request',
-            'description' => 'test add option desc request'
+            'description' => 'test add option desc request',
+            'story_id' => 1
         ]);
         $response = $this
             ->call(
@@ -64,11 +66,13 @@ class ApiTest extends TestCase
     {
         $firstNodeData = json_encode([
             'title'=> 'first node title',
-            'description' => 'first node descritpion'
+            'description' => 'first node descritpion',
+            'story_id' => 1
         ]);
         $secondNodeData = json_encode([
             'title'=> 'second node title',
-            'description' => 'second node descritpion'
+            'description' => 'second node descritpion',
+            'story_id' => 1
         ]);
         $this->call(
                 'POST',

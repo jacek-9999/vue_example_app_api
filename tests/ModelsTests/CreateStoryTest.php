@@ -14,7 +14,8 @@ class CreateStoryTest extends TestCase
     {
         $firstNode = new ActionNode([
             'title' => 'example title',
-            'description' => 'example description'
+            'description' => 'example description',
+            'story_id' => 1
         ]);
         $firstNode->save();
 
@@ -44,7 +45,7 @@ class CreateStoryTest extends TestCase
 
     public function testOptionsForNode()
     {
-        $actionNode = new ActionNode();
+        $actionNode = new ActionNode(['story_id' => 1]);
         $actionNode->save();
         $actionNode->addOption();
         $actionNode->addOption();
@@ -58,9 +59,9 @@ class CreateStoryTest extends TestCase
 
     public function testOptionsNodeMappings()
     {
-        $baseNode = new ActionNode();
+        $baseNode = new ActionNode(['story_id' => 1]);
         $baseNode->save();
-        $targetNode = new ActionNode();
+        $targetNode = new ActionNode(['story_id' => 1]);
         $targetNode->save();
         $option1 = $baseNode->addOption();
         $targetNode->setAsTarget($option1);
@@ -74,12 +75,16 @@ class CreateStoryTest extends TestCase
     {
         $initialNode = new ActionNode([
             'title' => 'initial node title',
-            'description' => 'initial node description']);
+            'description' => 'initial node description',
+            'story_id' => 1
+        ]);
         $initialNode->is_initial = true;
         $initialNode->save();
         $finalNode = new ActionNode([
             'title' => 'final node title',
-            'description' => 'final node description']);
+            'description' => 'final node description',
+            'story_id' => 1
+            ]);
         $finalNode->is_final = true;
         $finalNode->save();
 
@@ -100,7 +105,8 @@ class CreateStoryTest extends TestCase
         for ($i = 0; $i < 3; $i++) {
             $currentNode = new ActionNode([
                 'title' => $titlesText[$i],
-                'description' => $descriptionsText[$i]
+                'description' => $descriptionsText[$i],
+                'story_id' => 1
             ]);
             $currentNode->save();
             array_push($firstLevelNodes, $currentNode->id);
@@ -135,7 +141,8 @@ class CreateStoryTest extends TestCase
             foreach ($variants as $variant) {
                 $currentNode = new ActionNode([
                     'title' => $titlesTextSecondLevel[$k] . $variant,
-                    'description' => $descriptionsTextSecondLevel[$k] . $variant
+                    'description' => $descriptionsTextSecondLevel[$k] . $variant,
+                    'story_id' => 1
                 ]);
                 $currentNode->save();
                 array_push($secondLevelNodes, $currentNode->id);

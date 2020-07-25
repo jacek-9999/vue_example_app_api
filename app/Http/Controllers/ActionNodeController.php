@@ -40,6 +40,7 @@ class ActionNodeController extends Controller
         $node = new ActionNode([
             'title' => $request->input('title'),
             'description' => $request->input('description'),
+            'story_id' => $request->input('story_id'),
             'is_initial' => $request->input('is_initial') ?? false,
             'is_final' => $request->input('is_final') ?? false,
         ]);

@@ -16,6 +16,7 @@ class CreateActionNodesTable extends Migration
         Schema::create('action_nodes', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->integer('story_id');
             $table->integer('title_id')->nullable();
             $table->integer('description_id')->nullable();
             $table->boolean('is_initial')->default(false);

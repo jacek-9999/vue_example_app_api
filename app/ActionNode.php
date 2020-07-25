@@ -12,7 +12,7 @@ class ActionNode extends BaseAction
      * @var array
      */
     protected $fillable = [
-        'title_id', 'description_id'
+        'title_id', 'description_id', 'story_id'
     ];
 
     /**
