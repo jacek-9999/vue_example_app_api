@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 use App\ActionNode;
-use App\ActionNodeMapping;
 use App\ActionNodeOption;
 use Illuminate\Http\Request;
 
@@ -68,9 +67,6 @@ class ActionNodeController extends Controller
 
     public function getOptionTarget($optionId)
     {
-//        $targetNode = ActionNodeMapping::where('option_id', $optionId)
-//            ->firstOrFail()
-//            ->getMappedNode();
         $targetNode = ActionNodeOption::where('id', $optionId)
             ->firstOrFail()
             ->getTargetNode();

@@ -57,11 +57,6 @@ class ActionNode extends BaseAction
         $option = ActionNodeOption::where('id', '=', $optionId)->firstOrFail();
         $option->target_id = $this->id;
         $option->save();
-//        $mapping = new ActionNodeMapping([
-//            'goto_id' => $this->id,
-//            'option_id' => $optionId
-//        ]);
-//        $mapping->save();
     }
 
     public function getOptions(): object

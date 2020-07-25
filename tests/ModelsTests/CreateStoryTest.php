@@ -2,7 +2,6 @@
 
 use App\ActionNode;
 use App\ActionNodeOption;
-use App\ActionNodeMapping;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\DB;
 
