@@ -12,7 +12,7 @@ class ActionNode extends BaseAction
      * @var array
      */
     protected $fillable = [
-        'title_id', 'description_id', 'story_id'
+        'title_id', 'description_id', 'story_id', 'is_initial', 'is_final'
     ];
 
     /**
@@ -96,6 +96,6 @@ class ActionNode extends BaseAction
 
     public static function getStories()
     {
-        return ActionNode::where('is_initial', true)->get();
+        return ActionNode::where('is_initial', true)->get('story_id');
     }
 }

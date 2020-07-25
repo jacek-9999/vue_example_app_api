@@ -86,4 +86,16 @@ class ActionNodeController extends Controller
     {
 
     }
+
+    public function getStoriesList()
+    {
+        $resp = ActionNode::getStories();
+        return response()->json($resp);
+    }
+
+    public function getStory($id)
+    {
+        $resp = ActionNode::where('story_id', $id)->get();
+        return response()->json($resp);
+    }
 }

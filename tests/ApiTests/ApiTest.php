@@ -120,4 +120,54 @@ class ApiTest extends TestCase
                     ['CONTENT_TYPE' => 'application/json']);
         $this->assertEquals($validTarget, $targetMappedByOption->content());
     }
+
+    public function testGetStory()
+    {
+        $stories = ['A' => [], 'B' => []];
+        $stories['A'][0] = json_encode([
+            'title' => 'first node title',
+            'description' => 'first node descritpion',
+            'story_id' => 1,
+            'is_initial' => true
+        ]);
+        $stories['A'][1] = json_encode([
+            'title' => 'second node title',
+            'description' => 'second node descritpion',
+            'story_id' => 1
+        ]);
+        $stories['A'][2] = json_encode([
+             'title' => 'third node title',
+             'description' => 'third node descritpion',
+             'story_id' => 1
+        ]);
+        $stories['B'][0] = json_encode([
+            'title' => 'first node title',
+            'description' => 'first node descritpion',
+            'story_id' => 2,
+            'is_initial' => true
+        ]);
+        $stories['B'][1] = json_encode([
+            'title' => 'second node title',
+            'description' => 'second node descritpion',
+            'story_id' => 2
+        ]);
+        $stories['B'][2] = json_encode([
+             'title' => 'third node title',
+             'description' => 'third node descritpion',
+             'story_id' => 2
+        ]);
+        foreach ($stories as $story) {
+            foreach ($story as $node) {
+                $this->call(
+                'POST', 'node', [], [], [],
+                ['CONTENT_TYPE' => 'application/json'], $node);
+            }
+        }
+
+        $resp = $this->call(
+            'GET', 'stories',
+            ['CONTENT_TYPE' => 'application/json']
+        )->content();
+        $this->assertEquals('[{"story_id":1},{"story_id":2}]', $resp);
+    }
 }

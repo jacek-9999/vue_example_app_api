@@ -54,4 +54,14 @@ $router->group(['middleware' => 'cors'], function () use ($router) {
         '/node/{id}',
         'ActionNodeController@delete'
     );
+
+    $router->get(
+        '/stories',
+        'ActionNodeController@getStoriesList'
+    );
+
+    $router->get(
+        '/story/{id}',
+        'ActionNodeController@getStory'
+    );
 });
