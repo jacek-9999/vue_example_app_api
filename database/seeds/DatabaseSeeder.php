@@ -18,54 +18,27 @@ class DatabaseSeeder extends Seeder
         $faker = new Generator();
         $faker->addProvider(new Faker\Provider\Lorem($faker));
         $nodes = ['l1' => [], 'l2' => []];
-        $nodes['initial'] = $this
-            ->createNode($faker, true, false);
-        $nodes['final'] =   $this
-            ->createNode($faker, false, true);
-        $nodes['l1'][0] =   $this
-            ->createNode($faker);
-        $nodes['l1'][1] =   $this
-            ->createNode($faker);
+        $nodes['initial'] = $this->createNode($faker, true, false);
+        $nodes['final'] =   $this->createNode($faker, false, true);
+        $nodes['l1'][0] =   $this->createNode($faker);
+        $nodes['l1'][1] =   $this->createNode($faker);
         $nodes['l1'][0]->setAsTarget($nodes['initial']->addOption($faker->sentence(3)));
         $nodes['l1'][1]->setAsTarget($nodes['initial']->addOption($faker->sentence(3)));
-        $nodes['l2'][0] =   $this
-            ->createNode($faker);
-        $nodes['l2'][1] =   $this
-            ->createNode($faker);
-        $nodes['l2'][2] =   $this
-            ->createNode($faker);
-        $nodes['l2'][3] =   $this
-            ->createNode($faker);
-        $nodes['l2'][4] =   $this
-            ->createNode($faker);
-        $nodes['l2'][5] =   $this
-            ->createNode($faker);
-        $l1Options = [];
+        $nodes['l2'][0] =   $this->createNode($faker);
+        $nodes['l2'][1] =   $this->createNode($faker);
+        $nodes['l2'][2] =   $this->createNode($faker);
+        $nodes['l2'][3] =   $this->createNode($faker);
+        $nodes['l2'][4] =   $this->createNode($faker);
+        $nodes['l2'][5] =   $this->createNode($faker);
         foreach ($nodes['l1'] as $k => $n) {
-            $l1Options[$k] = [];
-            array_push($l1Options[$k], $n->addOption($faker->sentence(3)));
-            array_push($l1Options[$k], $n->addOption($faker->sentence(3)));
-            array_push($l1Options[$k], $n->addOption($faker->sentence(3)));
+            $x = $k ? 0 : 3;
+            $nodes['l2'][$x + 0]->setAsTarget($n->addOption($faker->sentence(3)));
+            $nodes['l2'][$x + 1]->setAsTarget($n->addOption($faker->sentence(3)));
+            $nodes['l2'][$x + 2]->setAsTarget($n->addOption($faker->sentence(3)));
         }
-        $l2Options = [];
         foreach ($nodes['l2'] as $k => $n) {
-            foreach ($l1Options as $prevNodeIndex) {
-                foreach ($prevNodeIndex as $optionId) {
-                    $n->setAsTarget($optionId);
-                }
-            }
-            $l2Options[$k] = [];
-            array_push($l2Options[$k], $n->addOption($faker->sentence(3)));
-            array_push($l2Options[$k], $n->addOption($faker->sentence(3)));
-        }
-        foreach ($l2Options as $nodeOptions) {
-            foreach ($nodeOptions as $option) {
-                if ($option % 2 === 0) {
-                    $nodes['initial']->setAsTarget($option);
-                } else {
-                    $nodes['final']->setAsTarget($option);
-                }
-            }
+        $nodes['initial']->setAsTarget($n->addOption($faker->sentence(3)));
+        $nodes['final']->setAsTarget($n->addOption($faker->sentence(3)));
         }
     }
 

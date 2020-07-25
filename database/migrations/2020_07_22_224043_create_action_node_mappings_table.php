@@ -18,7 +18,7 @@ class CreateActionNodeMappingsTable extends Migration
             $table->timestamps();
             $table->bigInteger('goto_id')->unsigned();
             $table->foreign('goto_id')->references('id')->on('action_nodes');
-            $table->bigInteger('option_id')->unsigned();
+            $table->bigInteger('option_id')->unsigned()->unique();
             $table->foreign('option_id')->references('id')->on('action_node_options');
             $table->integer('description_id')->nullable();
         });
