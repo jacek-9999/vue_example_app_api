@@ -23,6 +23,6 @@ class ActionNodeMapping extends BaseAction
 
     public function getMappedNode()
     {
-        return ActionNode::where('id', $this->goto_id)->first();
+        return ActionNode::where('id', $this->goto_id)->firstOrFail();
     }
 }

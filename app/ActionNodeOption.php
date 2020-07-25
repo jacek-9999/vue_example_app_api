@@ -37,6 +37,6 @@ class ActionNodeOption extends BaseAction
     public function getMapping()
     {
         return ActionNodeMapping::where('option_id', $this->id)
-            ->first();
+            ->firstOrFail();
     }
 }

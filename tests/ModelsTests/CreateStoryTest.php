@@ -177,7 +177,8 @@ class CreateStoryTest extends TestCase
          */
         foreach ($initialNode->getOptions() as $optionL1) {
             $this->assertTrue(in_array($optionL1->id, [1, 2, 3]));
-            $mappingL1 = $optionL1->getMapping();
+            $mappingL1 =
+                ActionNodeOption::where('id', $optionL1->id)->first()->getMapping();
             $this->assertTrue(in_array($mappingL1->goto_id, [3,4,5]));
             $mappedNodeL1 = $mappingL1->getMappedNode();
             $this->assertTrue(in_array(
@@ -188,7 +189,7 @@ class CreateStoryTest extends TestCase
             ));
             foreach ($mappedNodeL1->getOptions() as $optionL2) {
                 $this->assertTrue(in_array($optionL2->id, [4,7,10,13,16,19]));
-                $mappingL2 = $optionL2->getMapping();
+                $mappingL2 = ActionNodeOption::where('id', $optionL2->id)->first()->getMapping();
                 $this->assertTrue(in_array($mappingL2->goto_id, [6,7,8,9,10,11]));
                 $mappedNodeL2 = $mappingL2->getMappedNode();
                 $this->assertTrue(in_array(
@@ -202,7 +203,7 @@ class CreateStoryTest extends TestCase
                 ));
                 foreach ($mappedNodeL2->getOptions() as $optionL3) {
                     $this->assertTrue(in_array($optionL3->id, [5,6,8,9,11,12,14,15,17,18,20,21]));
-                    $mappingL3 = $optionL3->getMapping();
+                    $mappingL3 = ActionNodeOption::where('id', $optionL3->id)->first()->getMapping();
                     /*
                      * Last level nodes in this test are mapped to final or first node.
                      * So there are only two options here.

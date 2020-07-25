@@ -45,7 +45,10 @@ class ActionNode extends BaseAction
 
     public function addOption(string $description = '')
     {
-        $option = new ActionNodeOption(['node_id' => $this->id]);
+        $option = new ActionNodeOption([
+            'node_id' => $this->id,
+            'description' => $description
+        ]);
         $option->save();
         return $option->id;
     }
@@ -68,7 +71,21 @@ class ActionNode extends BaseAction
         if ($this->is_final) {
             throw new \Exception('getting options from final node');
         }
-        return ActionNodeOption::where('node_id', $this->id)->get();
+        return DB::table('action_node_options')
+            ->join(
+                $this->textTable,
+                'action_node_options.description_id',
+                '=',
+                "$this->textTable.id")
+            ->join('action_nodes',
+                'action_nodes.id',
+                '=',
+                'action_node_options.node_id')
+            ->where('action_nodes.id', '=', $this->id)
+            ->select(
+                'action_node_options.id',
+                "$this->textTable.description")
+            ->get();
     }
 
     public function getTitle(): string

@@ -20,6 +20,10 @@ $router->group(['middleware' => 'cors'], function () use ($router) {
         'ActionNodeController@read'
     );
 
+    $router->get(
+        '/node_options/{id}',
+        'ActionNodeController@readOptions'
+    );
 
     $router->post(
         '/node',
@@ -29,6 +33,16 @@ $router->group(['middleware' => 'cors'], function () use ($router) {
     $router->post(
         '/option',
         'ActionNodeController@addOption'
+    );
+
+    $router->post(
+        '/target',
+        'ActionNodeController@setTarget'
+    );
+
+    $router->get(
+        '/target/{optionId}',
+        'ActionNodeController@getOptionTarget'
     );
 
     $router->patch(
