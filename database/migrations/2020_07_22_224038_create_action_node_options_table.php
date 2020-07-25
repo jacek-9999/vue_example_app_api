@@ -16,6 +16,7 @@ class CreateActionNodeOptionsTable extends Migration
         Schema::create('action_node_options', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->bigInteger('target_id')->unsigned()->nullable();
             $table->bigInteger('node_id')->unsigned()->nullable();
             $table->foreign('node_id')->references('id')->on('action_nodes');
             $table->integer('description_id')->nullable();

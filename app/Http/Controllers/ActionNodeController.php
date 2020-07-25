@@ -68,9 +68,12 @@ class ActionNodeController extends Controller
 
     public function getOptionTarget($optionId)
     {
-        $targetNode = ActionNodeMapping::where('option_id', $optionId)
+//        $targetNode = ActionNodeMapping::where('option_id', $optionId)
+//            ->firstOrFail()
+//            ->getMappedNode();
+        $targetNode = ActionNodeOption::where('id', $optionId)
             ->firstOrFail()
-            ->getMappedNode();
+            ->getTargetNode();
         $responseData = $targetNode->only(['id', 'is_initial', 'is_final']);
         $responseData['title'] = $targetNode->getTitle();
         $responseData['description'] = $targetNode->getDescription();

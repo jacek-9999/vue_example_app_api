@@ -186,8 +186,8 @@ class CreateStoryTest extends TestCase
             $this->assertTrue(in_array($optionL1->id, [1, 2, 3]));
             $mappingL1 =
                 ActionNodeOption::where('id', $optionL1->id)->first()->getMapping();
-            $this->assertTrue(in_array($mappingL1->goto_id, [3,4,5]));
-            $mappedNodeL1 = $mappingL1->getMappedNode();
+            $this->assertTrue(in_array($mappingL1, [3,4,5]));
+            $mappedNodeL1 = $optionL1->getTargetNode();
             $this->assertTrue(in_array(
                 $mappedNodeL1->getDescription(),
                 ['desc first lvl A',
@@ -197,8 +197,8 @@ class CreateStoryTest extends TestCase
             foreach ($mappedNodeL1->getOptions() as $optionL2) {
                 $this->assertTrue(in_array($optionL2->id, [4,7,10,13,16,19]));
                 $mappingL2 = ActionNodeOption::where('id', $optionL2->id)->first()->getMapping();
-                $this->assertTrue(in_array($mappingL2->goto_id, [6,7,8,9,10,11]));
-                $mappedNodeL2 = $mappingL2->getMappedNode();
+                $this->assertTrue(in_array($mappingL2, [6,7,8,9,10,11]));
+                $mappedNodeL2 = $optionL2->getTargetNode();
                 $this->assertTrue(in_array(
                     $mappedNodeL2->getDescription(),
                     ['desc sec lvl A_variant_1',
@@ -215,8 +215,8 @@ class CreateStoryTest extends TestCase
                      * Last level nodes in this test are mapped to final or first node.
                      * So there are only two options here.
                      */
-                    $this->assertTrue(in_array($mappingL3->goto_id, [1,2]));
-                    $mappedNodeL3 = $mappingL3->getMappedNode();
+                    $this->assertTrue(in_array($mappingL3, [1,2]));
+                    $mappedNodeL3 = $mappingL3->getTargetNode();
                     $this->assertTrue(in_array(
                         $mappedNodeL3->getDescription(),
                         ['initial node description',

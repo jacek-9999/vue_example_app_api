@@ -12,7 +12,7 @@ class ActionNodeOption extends BaseAction
      * @var array
      */
     protected $fillable = [
-        'node_id', 'description_id',
+        'target_id', 'node_id', 'description_id',
     ];
 
     /**
@@ -36,7 +36,13 @@ class ActionNodeOption extends BaseAction
 
     public function getMapping()
     {
-        return ActionNodeMapping::where('option_id', $this->id)
-            ->firstOrFail();
+        return $this->goto_id;
+//        return ActionNodeMapping::where('option_id', $this->id)
+//            ->firstOrFail();
+    }
+
+    public function getTargetNode()
+    {
+        return ActionNode::where('id', $this->target_id)->firstOrFail();
     }
 }
