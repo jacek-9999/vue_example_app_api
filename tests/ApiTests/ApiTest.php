@@ -169,5 +169,20 @@ class ApiTest extends TestCase
             ['CONTENT_TYPE' => 'application/json']
         )->content();
         $this->assertEquals('[{"story_id":1},{"story_id":2}]', $resp);
+        $respStory1 = $this->call(
+            'GET', 'story/1',
+            ['CONTENT_TYPE' => 'application/json']
+        )->content();
+        $respStory2 = $this->call(
+            'GET', 'story/2',
+            ['CONTENT_TYPE' => 'application/json']
+        )->content();
+        $this->assertEquals(
+            '[{"description":"first node title","id":1,"is_initial":1,"is_final":0},{"description":"second node title","id":2,"is_initial":0,"is_final":0},{"description":"third node title","id":3,"is_initial":0,"is_final":0}]',
+            $respStory1);
+        $this->assertEquals(
+            '[{"description":"first node title","id":4,"is_initial":1,"is_final":0},{"description":"second node title","id":5,"is_initial":0,"is_final":0},{"description":"third node title","id":6,"is_initial":0,"is_final":0}]',
+            $respStory2
+        );
     }
 }

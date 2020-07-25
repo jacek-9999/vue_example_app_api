@@ -11,11 +11,11 @@ abstract class BaseAction extends Model
     /*
      * prepared for swap languages
      */
-    protected $textTable = 'descriptions_pl';
+    static $textTable = 'descriptions_pl';
 
     public function getDescription()
     {
-        $out = DB::table($this->textTable)
+        $out = DB::table(self::$textTable)
             ->select('description')
             ->where('id', $this->description_id)
             ->first();

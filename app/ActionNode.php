@@ -70,10 +70,10 @@ class ActionNode extends BaseAction
         }
         return DB::table('action_node_options')
             ->join(
-                $this->textTable,
+                self::$textTable,
                 'action_node_options.description_id',
                 '=',
-                "$this->textTable.id")
+                self::$textTable.'.id')
             ->join('action_nodes',
                 'action_nodes.id',
                 '=',
@@ -81,13 +81,13 @@ class ActionNode extends BaseAction
             ->where('action_nodes.id', '=', $this->id)
             ->select(
                 'action_node_options.id',
-                "$this->textTable.description")
+                self::$textTable.'.description')
             ->get();
     }
 
     public function getTitle(): string
     {
-        $out = DB::table($this->textTable)
+        $out = DB::table(self::$textTable)
             ->select('description')
             ->where('id', $this->title_id)
             ->first();
@@ -97,5 +97,24 @@ class ActionNode extends BaseAction
     public static function getStories()
     {
         return ActionNode::where('is_initial', true)->get('story_id');
+    }
+
+    public static function getStoryNodes($id)
+    {
+        return DB::table('action_nodes')
+            ->join(
+                self::$textTable,
+                self::$textTable.'.id',
+                '=',
+                'action_nodes.title_id')
+            ->where('action_nodes.story_id', '=', $id)
+            ->select(
+                self::$textTable.'.description',
+                'action_nodes.id',
+                'action_nodes.is_initial',
+                'action_nodes.is_final')
+            ->get();
+//        return ActionNode::where('story_id', $id)
+//            ->get(['id', 'is_initial', 'is_final']);
     }
 }

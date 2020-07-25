@@ -95,7 +95,7 @@ class ActionNodeController extends Controller
 
     public function getStory($id)
     {
-        $resp = ActionNode::where('story_id', $id)->get();
+        $resp = ActionNode::getStoryNodes($id);
         return response()->json($resp);
     }
 }
