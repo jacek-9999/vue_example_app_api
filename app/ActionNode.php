@@ -96,7 +96,18 @@ class ActionNode extends BaseAction
 
     public static function getStories()
     {
-        return ActionNode::where('is_initial', true)->get('story_id');
+        return DB::table('action_nodes')
+            ->join(
+                self::$textTable,
+                'action_nodes.title_id',
+                '=',
+                self::$textTable.'.id')
+            ->where('action_nodes.is_initial', '=', true)
+            ->select(
+                'action_nodes.story_id',
+                self::$textTable.'.description')
+            ->get();
+//        return ActionNode::where('is_initial', true)->get('story_id');
     }
 
     public static function getStoryNodes($id)
