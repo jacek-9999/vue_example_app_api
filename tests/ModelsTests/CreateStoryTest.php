@@ -56,20 +56,6 @@ class CreateStoryTest extends TestCase
         $this->assertEquals(3, count($savedOptions));
     }
 
-    public function testOptionsNodeMappings()
-    {
-        $baseNode = new ActionNode(['story_id' => 1]);
-        $baseNode->save();
-        $targetNode = new ActionNode(['story_id' => 1]);
-        $targetNode->save();
-        $option1 = $baseNode->addOption();
-        $targetNode->setAsTarget($option1);
-
-        $savedMapping = ActionNodeMapping::where('option_id', $option1)->first();
-        $this->assertEquals($targetNode->id, $savedMapping->goto_id);
-        $this->assertEquals($option1, $savedMapping->option_id);
-    }
-
     public function testFullProcess()
     {
         $initialNode = new ActionNode([
@@ -174,19 +160,15 @@ class CreateStoryTest extends TestCase
         $this->assertEquals(21, ActionNodeOption::all()->count());
 
         /*
-         * Number of options is equal to number of mappings.
-         */
-        $this->assertEquals(ActionNodeOption::all()->count(), ActionNodeMapping::all()->count());
-
-        /*
          * Test traversing nodes, intentionally without recursion for testing purposes.
          */
         foreach ($initialNode->getOptions() as $optionL1) {
             $this->assertTrue(in_array($optionL1->id, [1, 2, 3]));
+            $optionModel = ActionNodeOption::where('id', $optionL1->id)->first();
             $mappingL1 =
-                ActionNodeOption::where('id', $optionL1->id)->first()->getMapping();
+                $optionModel->getMapping();
             $this->assertTrue(in_array($mappingL1, [3,4,5]));
-            $mappedNodeL1 = $optionL1->getTargetNode();
+            $mappedNodeL1 = $optionModel->getTargetNode();
             $this->assertTrue(in_array(
                 $mappedNodeL1->getDescription(),
                 ['desc first lvl A',
@@ -195,9 +177,10 @@ class CreateStoryTest extends TestCase
             ));
             foreach ($mappedNodeL1->getOptions() as $optionL2) {
                 $this->assertTrue(in_array($optionL2->id, [4,7,10,13,16,19]));
-                $mappingL2 = ActionNodeOption::where('id', $optionL2->id)->first()->getMapping();
+                $optionModel = ActionNodeOption::where('id', $optionL2->id)->first();
+                $mappingL2 = $optionModel->getMapping();
                 $this->assertTrue(in_array($mappingL2, [6,7,8,9,10,11]));
-                $mappedNodeL2 = $optionL2->getTargetNode();
+                $mappedNodeL2 = $optionModel->getTargetNode();
                 $this->assertTrue(in_array(
                     $mappedNodeL2->getDescription(),
                     ['desc sec lvl A_variant_1',
@@ -209,13 +192,14 @@ class CreateStoryTest extends TestCase
                 ));
                 foreach ($mappedNodeL2->getOptions() as $optionL3) {
                     $this->assertTrue(in_array($optionL3->id, [5,6,8,9,11,12,14,15,17,18,20,21]));
-                    $mappingL3 = ActionNodeOption::where('id', $optionL3->id)->first()->getMapping();
+                    $optionModel = ActionNodeOption::where('id', $optionL3->id)->first();
+                    $mappingL3 = $optionModel->getMapping();
                     /*
                      * Last level nodes in this test are mapped to final or first node.
                      * So there are only two options here.
                      */
                     $this->assertTrue(in_array($mappingL3, [1,2]));
-                    $mappedNodeL3 = $mappingL3->getTargetNode();
+                    $mappedNodeL3 = $optionModel->getTargetNode();
                     $this->assertTrue(in_array(
                         $mappedNodeL3->getDescription(),
                         ['initial node description',
@@ -226,7 +210,10 @@ class CreateStoryTest extends TestCase
         }
         $stories = ActionNode::getStories();
         $this->assertEquals(1, $stories->count());
-        $this->assertEquals('initial node title', $stories->first()->getTitle());
-        $this->assertEquals('initial node description', $stories->first()->getDescription());
+        $this->assertEquals('initial node title', $stories->first()->title);
+        $this->assertEquals(
+            'initial node description',
+            ActionNode::where('id', $stories->first()->id)->first()->getDescription()
+        );
     }
 }

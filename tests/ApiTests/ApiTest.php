@@ -168,7 +168,9 @@ class ApiTest extends TestCase
             'GET', 'stories',
             ['CONTENT_TYPE' => 'application/json']
         )->content();
-        $this->assertEquals('[{"story_id":1,"description":"first node title"},{"story_id":2,"description":"first node title"}]', $resp);
+        $this->assertEquals(
+            '[{"id":1,"story_id":1,"title":"first node title"},{"id":4,"story_id":2,"title":"first node title"}]',
+            $resp);
         $respStory1 = $this->call(
             'GET', 'story/1',
             ['CONTENT_TYPE' => 'application/json']

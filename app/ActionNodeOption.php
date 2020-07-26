@@ -36,7 +36,7 @@ class ActionNodeOption extends BaseAction
 
     public function getMapping()
     {
-        return $this->goto_id;
+        return $this->target_id;
     }
 
     public function getTargetNode()

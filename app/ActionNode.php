@@ -104,8 +104,9 @@ class ActionNode extends BaseAction
                 self::$textTable.'.id')
             ->where('action_nodes.is_initial', '=', true)
             ->select(
+                'action_nodes.id',
                 'action_nodes.story_id',
-                self::$textTable.'.description')
+                self::$textTable.'.description AS title')
             ->get();
 //        return ActionNode::where('is_initial', true)->get('story_id');
     }
