@@ -138,7 +138,7 @@ class ActionNode extends BaseAction
 
     public function updateDescription($newTitle) {
         DB::table(self::$textTable)
-            ->where('id', '=', $this->descripion_id)
+            ->where('id', '=', $this->description_id)
             ->update(['description' => $newTitle]);
     }
 }
