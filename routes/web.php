@@ -49,10 +49,13 @@ $router->group(['middleware' => 'cors'], function () use ($router) {
         '/node/{id}',
         'ActionNodeController@edit'
     );
-
-    $router->patch(
+    $router->delete(
         '/node/{id}',
         'ActionNodeController@delete'
+    );
+    $router->options(
+        '/node/{id}',
+        'ActionNodeController@edit'
     );
 
     $router->get(

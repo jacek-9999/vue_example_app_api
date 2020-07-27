@@ -77,9 +77,18 @@ class ActionNodeController extends Controller
     }
 
 
-    public function edit($id, Request $request)
+    public function edit(Request $request)
     {
-
+        $payload = $request->toArray();
+        $node = ActionNode::where('id', $payload['id'])->firstOrFail();
+        $node->updateTitle($payload['title']);
+        $node->updateDescription($payload['description']);
+        $node->is_final = (bool)$payload['is_final'];
+        $node->save();
+        $responseData = $node->only(['id', 'is_initial', 'is_final']);
+        $responseData['title'] = $node->getTitle();
+        $responseData['description'] = $node->getDescription();
+        return response()->json($responseData);
     }
 
     public function delete($id)

@@ -26,14 +26,14 @@ class ActionNode extends BaseAction
     public function __construct(array $attributes = [])
     {
         if (isset($attributes['title'])) {
-           $titleId = DB::table('descriptions_pl')
+           $titleId = DB::table(self::$textTable)
             ->insertGetId(['description' => $attributes['title']]);
            unset($attributes['title']);
            $attributes['title_id'] = $titleId;
         }
 
         if (isset($attributes['description'])) {
-           $descriptionId = DB::table('descriptions_pl')
+           $descriptionId = DB::table(self::$textTable)
             ->insertGetId(['description' => $attributes['description']]);
             unset($attributes['description']);
            $attributes['description_id'] = $descriptionId;
@@ -128,5 +128,17 @@ class ActionNode extends BaseAction
             ->get();
 //        return ActionNode::where('story_id', $id)
 //            ->get(['id', 'is_initial', 'is_final']);
+    }
+
+    public function updateTitle($newTitle) {
+        DB::table(self::$textTable)
+            ->where('id', '=', $this->title_id)
+            ->update(['description' => $newTitle]);
+    }
+
+    public function updateDescription($newTitle) {
+        DB::table(self::$textTable)
+            ->where('id', '=', $this->descripion_id)
+            ->update(['description' => $newTitle]);
     }
 }
