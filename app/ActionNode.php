@@ -121,15 +121,15 @@ class ActionNode extends BaseAction
                 self::$textTable.'.id',
                 '=',
                 'action_nodes.title_id')
-            ->where('action_nodes.story_id', '=', $id)
+            ->where([
+                ['action_nodes.story_id', '=', $id],
+                ['action_nodes.deleted_at', '=', null]])
             ->select(
                 self::$textTable.'.description AS title',
                 'action_nodes.id',
                 'action_nodes.is_initial',
                 'action_nodes.is_final')
             ->get();
-//        return ActionNode::where('story_id', $id)
-//            ->get(['id', 'is_initial', 'is_final']);
     }
 
     public function updateTitle($newTitle) {
