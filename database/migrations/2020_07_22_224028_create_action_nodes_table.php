@@ -21,6 +21,7 @@ class CreateActionNodesTable extends Migration
             $table->integer('description_id')->nullable();
             $table->boolean('is_initial')->default(false);
             $table->boolean('is_final')->default(false);
+            $table->softDeletes();
         });
     }
 

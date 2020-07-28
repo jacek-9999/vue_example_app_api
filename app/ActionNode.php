@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ActionNode extends BaseAction
 {
+    use SoftDeletes;
     /**
      * The attributes that are mass assignable.
      *
