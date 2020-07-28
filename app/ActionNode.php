@@ -121,7 +121,7 @@ class ActionNode extends BaseAction
                 'action_nodes.title_id')
             ->where('action_nodes.story_id', '=', $id)
             ->select(
-                self::$textTable.'.description',
+                self::$textTable.'.description AS title',
                 'action_nodes.id',
                 'action_nodes.is_initial',
                 'action_nodes.is_final')
