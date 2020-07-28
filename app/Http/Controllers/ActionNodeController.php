@@ -93,7 +93,7 @@ class ActionNodeController extends Controller
 
     public function delete($id)
     {
-        ActionNode::getStoryNodes($id)->firstOrFail()->delete();
+        ActionNode::where('id', '=', $id)->firstOrFail()->delete();
     }
 
     public function getStoriesList()
