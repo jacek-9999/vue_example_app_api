@@ -104,7 +104,9 @@ class ActionNode extends BaseAction
                 'action_nodes.title_id',
                 '=',
                 self::$textTable.'.id')
-            ->where('action_nodes.is_initial', '=', true)
+            ->where([
+                ['action_nodes.is_initial', '=', true],
+                ['action_nodes.deleted_at', '=', NULL]])
             ->select(
                 'action_nodes.id',
                 'action_nodes.story_id',

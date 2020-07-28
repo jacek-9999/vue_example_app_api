@@ -67,4 +67,12 @@ $router->group(['middleware' => 'cors'], function () use ($router) {
         '/story/{id}',
         'ActionNodeController@getStory'
     );
+    $router->delete(
+        '/story/{id}',
+        'ActionNodeController@storyDelete'
+    );
+    $router->options(
+        '/story/{id}',
+        'ActionNodeController@storyDelete'
+    );
 });
