@@ -20,7 +20,7 @@ class ActionNodeController extends Controller
     public function read($id)
     {
         $node = ActionNode::where('id', $id)
-            ->first();
+            ->firstOrFail();
         $responseData = $node->only(['id', 'is_initial', 'is_final']);
         $responseData['title'] = $node->getTitle();
         $responseData['description'] = $node->getDescription();
