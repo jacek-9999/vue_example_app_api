@@ -98,7 +98,7 @@ class ActionNode extends BaseAction
 
     public static function getStories()
     {
-        return DB::table('action_nodes')
+        $stories =  DB::table('action_nodes')
             ->join(
                 self::$textTable,
                 'action_nodes.title_id',
@@ -112,7 +112,12 @@ class ActionNode extends BaseAction
                 'action_nodes.story_id',
                 self::$textTable.'.description AS title')
             ->get();
-//        return ActionNode::where('is_initial', true)->get('story_id');
+        // todo: optimize query without loop
+        foreach ($stories as &$story) {
+            $count = DB::select(DB::raw("SELECT story_id, COUNT(*) AS story_count FROM action_nodes WHERE story_id = $story->story_id AND deleted_at IS NULL GROUP BY story_id"));
+            $story->story_count = $count[0]->story_count;
+        }
+        return $stories;
     }
 
     public static function getStoryNodes($id)
