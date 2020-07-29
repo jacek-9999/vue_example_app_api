@@ -61,7 +61,7 @@ class ActionNode extends BaseAction
         $option->save();
     }
 
-    public function getOptions(): object
+    public function getOptions(): array
     {
         /*
          * that assertion should be checked when trying to make mapping take place,
@@ -70,21 +70,27 @@ class ActionNode extends BaseAction
         if ($this->is_final) {
             throw new \Exception('getting options from final node');
         }
-        return DB::table('action_node_options')
-            ->join(
-                self::$textTable,
-                'action_node_options.description_id',
-                '=',
-                self::$textTable.'.id')
+        $ids = DB::table('action_node_options')
             ->join('action_nodes',
                 'action_nodes.id',
                 '=',
                 'action_node_options.node_id')
             ->where('action_nodes.id', '=', $this->id)
-            ->select(
-                'action_node_options.id',
-                self::$textTable.'.description')
+            ->select('action_node_options.target_id')
             ->get();
+        $optionNodes = [];
+        foreach ($ids as $id) {
+            $n = ActionNode::where('id', $id->target_id)->first();
+            array_push(
+                $optionNodes,[
+                    'id' => $n->id,
+                    'title' => $n->getTitle(),
+                    'description' => $n->getDescription(),
+                    'is_initial' => $n->is_initial,
+                    'is_final' => $n->is_final
+            ]);
+        }
+        return $optionNodes;
     }
 
     public function getTitle(): string

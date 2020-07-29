@@ -24,6 +24,7 @@ class ActionNodeController extends Controller
         $responseData = $node->only(['id', 'is_initial', 'is_final']);
         $responseData['title'] = $node->getTitle();
         $responseData['description'] = $node->getDescription();
+        $responseData['options'] = $node->getOptions();
         return response()->json($responseData);
     }
 
