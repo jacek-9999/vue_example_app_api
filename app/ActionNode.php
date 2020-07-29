@@ -135,14 +135,24 @@ class ActionNode extends BaseAction
     }
 
     public function updateTitle($newTitle) {
-        DB::table(self::$textTable)
+        $updated = DB::table(self::$textTable)
             ->where('id', '=', $this->title_id)
             ->update(['description' => $newTitle]);
+        if (!$updated) {
+           $this->title_id = DB::table(self::$textTable)
+            ->insertGetId(['description' => $newTitle]);
+            $this->save();
+        }
     }
 
     public function updateDescription($newTitle) {
-        DB::table(self::$textTable)
+        $updated = DB::table(self::$textTable)
             ->where('id', '=', $this->description_id)
             ->update(['description' => $newTitle]);
+        if (!$updated) {
+           $this->description_id = DB::table(self::$textTable)
+            ->insertGetId(['description' => $newTitle]);
+           $this->save();
+        }
     }
 }

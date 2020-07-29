@@ -36,14 +36,15 @@ class ActionNodeController extends Controller
 
     public function create(Request $request)
     {
+        $payload = $request->toArray();
         $node = new ActionNode([
-            'title' => $request->input('title'),
-            'description' => $request->input('description'),
-            'story_id' => $request->input('story_id'),
-            'is_initial' => $request->input('is_initial') ?? false,
-            'is_final' => $request->input('is_final') ?? false,
+            'story_id' => $payload['story_id'],
+            'is_initial' => $payload['is_initial'] ?? false,
+            'is_final' => $payload['is_final'] ?? false,
         ]);
         $node->save();
+        $node->updateTitle($payload['title']);
+        $node->updateDescription($payload['description']);
         return response()->json($node->only('id'));
     }
 

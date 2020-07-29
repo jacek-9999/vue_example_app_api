@@ -24,8 +24,11 @@ $router->group(['middleware' => 'cors'], function () use ($router) {
         '/node_options/{id}',
         'ActionNodeController@readOptions'
     );
-
-    $router->post(
+    $router->options(
+        '/node',
+        'ActionNodeController@create'
+    );
+    $router->put(
         '/node',
         'ActionNodeController@create'
     );
