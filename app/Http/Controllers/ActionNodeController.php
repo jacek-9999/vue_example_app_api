@@ -37,6 +37,10 @@ class ActionNodeController extends Controller
     public function create(Request $request)
     {
         $payload = $request->toArray();
+        if ($payload['story_id'] === 'new') {
+            $payload['story_id'] = ActionNode::max('story_id') + 1;
+            $payload['is_initial'] = true;
+        }
         $node = new ActionNode([
             'story_id' => $payload['story_id'],
             'is_initial' => $payload['is_initial'] ?? false,
