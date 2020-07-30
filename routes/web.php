@@ -33,7 +33,11 @@ $router->group(['middleware' => 'cors'], function () use ($router) {
         'ActionNodeController@create'
     );
 
-    $router->post(
+    $router->options(
+        '/option',
+        'ActionNodeController@addOption'
+    );
+    $router->put(
         '/option',
         'ActionNodeController@addOption'
     );

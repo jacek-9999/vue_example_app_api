@@ -51,7 +51,7 @@ class ActionNode extends BaseAction
             'description' => $description
         ]);
         $option->save();
-        return $option->id;
+        return $option;
     }
 
     public function setAsTarget($optionId): void

@@ -40,10 +40,14 @@ class ActionNodeController extends Controller
     public function create(Request $request)
     {
         $payload = $request->toArray();
+        if ((bool)$payload['is_initial'] && (bool)$payload['is_final']) {
+            throw new \Exception("initial can't be final");
+        }
         if ($payload['story_id'] === 'new') {
             $payload['story_id'] = ActionNode::max('story_id') + 1;
             $payload['is_initial'] = true;
         }
+
         $node = new ActionNode([
             'story_id' => $payload['story_id'],
             'is_initial' => $payload['is_initial'] ?? false,
@@ -57,10 +61,13 @@ class ActionNodeController extends Controller
 
     public function addOption(Request $request)
     {
-       $node = ActionNode::where('id', $request->input('node_id'))
-           ->firstOrFail();
-       $optionId = $node->addOption($request->input('description'));
-       return response()->json(['option_id' => $optionId]);
+        $baseNode = ActionNode::where('id', $request->input('base_id'))
+            ->firstOrFail();
+        $option = $baseNode->addOption('dsc');
+        $targetNode = ActionNode::where('id', $request->input('target_id'))
+            ->firstOrFail();
+        $targetNode->setAsTarget($option->id);
+        return response()->json(['status' => 'assigned']);
     }
 
     public function setTarget(Request $request)
@@ -89,6 +96,12 @@ class ActionNodeController extends Controller
     {
         $payload = $request->toArray();
         $node = ActionNode::where('id', $payload['id'])->firstOrFail();
+        if (
+            $node->is_initial && (bool)$payload['is_final'] ||
+            $node->is_final && (bool)$payload['is_initial']
+        ) {
+            throw new \Exception("initial can't be final");
+        }
         $node->updateTitle($payload['title']);
         $node->updateDescription($payload['description']);
         $node->is_final = (bool)$payload['is_final'];
