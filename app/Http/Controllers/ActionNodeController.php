@@ -40,7 +40,7 @@ class ActionNodeController extends Controller
     public function create(Request $request)
     {
         $payload = $request->toArray();
-        if ((bool)$payload['is_initial'] && (bool)$payload['is_final']) {
+        if ((isset($payload['is_initial']) && (bool)$payload['is_initial']) && (bool)$payload['is_final']) {
             throw new \Exception("initial can't be final");
         }
         if ($payload['story_id'] === 'new') {
