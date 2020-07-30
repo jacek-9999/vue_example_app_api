@@ -61,10 +61,13 @@ $router->group(['middleware' => 'cors'], function () use ($router) {
         'ActionNodeController@delete'
     );
     $router->options(
-        '/node/{id}',
-        'ActionNodeController@edit'
+        '/unlink_node',
+        'ActionNodeController@unlinkNode'
     );
-
+    $router->patch(
+        '/unlink_node',
+        'ActionNodeController@unlinkNode'
+    );
     $router->get(
         '/stories',
         'ActionNodeController@getStoriesList'
@@ -81,5 +84,9 @@ $router->group(['middleware' => 'cors'], function () use ($router) {
     $router->options(
         '/story/{id}',
         'ActionNodeController@storyDelete'
+    );
+    $router->patch(
+        '/node/{id}',
+        'ActionNodeController@edit'
     );
 });

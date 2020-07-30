@@ -70,6 +70,13 @@ class ActionNodeController extends Controller
         return response()->json(['status' => 'assigned']);
     }
 
+    public function unlinkNode(Request $request)
+    {
+        $data = $request->toArray();
+        $baseNode = ActionNode::where('id', $data['base_id'])->firstOrFail();
+        return response()->json(['status' => $baseNode->unlink($data['target_id'])]);
+    }
+
     public function setTarget(Request $request)
     {
         $option = ActionNodeOption::where('id', $request->input('option_id'))

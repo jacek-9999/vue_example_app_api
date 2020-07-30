@@ -166,4 +166,9 @@ class ActionNode extends BaseAction
            $this->save();
         }
     }
+
+    public function unlink($targetId) {
+        ActionNodeOption::where([['target_id', $targetId],['node_id', $this->id]])->delete();
+        return 'unlinked';
+    }
 }
