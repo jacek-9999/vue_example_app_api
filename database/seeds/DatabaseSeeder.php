@@ -49,8 +49,8 @@ class DatabaseSeeder extends Seeder
         $nodes['final'] =   $this->createNode($faker, false, true, $story_id);
         $nodes['l1'][0] =   $this->createNode($faker, false, false, $story_id);
         $nodes['l1'][1] =   $this->createNode($faker, false, false, $story_id);
-        $nodes['l1'][0]->setAsTarget($nodes['initial']->addOption($faker->sentence(3)));
-        $nodes['l1'][1]->setAsTarget($nodes['initial']->addOption($faker->sentence(3)));
+        $nodes['l1'][0]->setAsTarget($nodes['initial']->addOption($faker->sentence(3))->id);
+        $nodes['l1'][1]->setAsTarget($nodes['initial']->addOption($faker->sentence(3))->id);
         $nodes['l2'][0] =   $this->createNode($faker, false, false, $story_id);
         $nodes['l2'][1] =   $this->createNode($faker, false, false, $story_id);
         $nodes['l2'][2] =   $this->createNode($faker, false, false, $story_id);
@@ -59,13 +59,13 @@ class DatabaseSeeder extends Seeder
         $nodes['l2'][5] =   $this->createNode($faker, false, false, $story_id);
         foreach ($nodes['l1'] as $k => $n) {
             $x = $k ? 0 : 3;
-            $nodes['l2'][$x + 0]->setAsTarget($n->addOption($faker->sentence(3)));
-            $nodes['l2'][$x + 1]->setAsTarget($n->addOption($faker->sentence(3)));
-            $nodes['l2'][$x + 2]->setAsTarget($n->addOption($faker->sentence(3)));
+            $nodes['l2'][$x + 0]->setAsTarget($n->addOption($faker->sentence(3))->id);
+            $nodes['l2'][$x + 1]->setAsTarget($n->addOption($faker->sentence(3))->id);
+            $nodes['l2'][$x + 2]->setAsTarget($n->addOption($faker->sentence(3))->id);
         }
         foreach ($nodes['l2'] as $k => $n) {
-            $nodes['initial']->setAsTarget($n->addOption($faker->sentence(3)));
-            $nodes['final']->setAsTarget($n->addOption($faker->sentence(3)));
+            $nodes['initial']->setAsTarget($n->addOption($faker->sentence(3))->id);
+            $nodes['final']->setAsTarget($n->addOption($faker->sentence(3))->id);
         }
     }
 }
