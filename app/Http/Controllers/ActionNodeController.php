@@ -104,8 +104,8 @@ class ActionNodeController extends Controller
         $payload = $request->toArray();
         $node = ActionNode::where('id', $payload['id'])->firstOrFail();
         if (
-            $node->is_initial && (bool)$payload['is_final'] ||
-            $node->is_final && (bool)$payload['is_initial']
+            isset($node->is_initial) && $node->is_initial && (bool)$payload['is_final'] ||
+            isset($node->is_final) && $node->is_final && (isset($payload['is_initial']) && (bool)$payload['is_initial'])
         ) {
             throw new \Exception("initial can't be final");
         }

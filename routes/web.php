@@ -72,6 +72,10 @@ $router->group(['middleware' => 'cors'], function () use ($router) {
         '/unlink_node',
         'ActionNodeController@unlinkNode'
     );
+    $router->options(
+        '/stories',
+        'ActionNodeController@getStoriesList'
+    );
     $router->get(
         '/stories',
         'ActionNodeController@getStoriesList'
