@@ -76,21 +76,38 @@ class ActionNode extends BaseAction
                 '=',
                 'action_node_options.node_id')
             ->where('action_nodes.id', '=', $this->id)
-            ->select('action_node_options.target_id')
+            ->select(['action_node_options.target_id', 'action_node_options.id'])
             ->get();
         $optionNodes = [];
         foreach ($ids as $id) {
             $n = ActionNode::where('id', $id->target_id)->first();
-            array_push(
-                $optionNodes,[
-                    'id' => $n->id,
-                    'title' => $n->getTitle(),
-                    'description' => $n->getDescription(),
-                    'is_initial' => $n->is_initial,
-                    'is_final' => $n->is_final
-            ]);
+            if (empty($n)) {
+                ActionNodeOption::where('id', $id->id)->first()->delete();
+            } else {
+                array_push(
+                    $optionNodes,[
+                        'id' => $n->id,
+                        'title' => $n->getTitle(),
+                        'description' => $n->getDescription(),
+                        'is_initial' => $n->is_initial,
+                        'is_final' => $n->is_final
+                ]);
+            }
         }
         return $optionNodes;
+    }
+
+    public function getOptionIds(): object
+    {
+        $ids = DB::table('action_node_options')
+            ->join('action_nodes',
+                'action_nodes.id',
+                '=',
+                'action_node_options.node_id')
+            ->where('action_nodes.id', '=', $this->id)
+            ->select('action_node_options.id')
+            ->get();
+        return $ids;
     }
 
     public function getTitle(): string

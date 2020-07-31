@@ -121,7 +121,11 @@ class ActionNodeController extends Controller
 
     public function delete($id)
     {
-        ActionNode::where('id', '=', $id)->firstOrFail()->delete();
+        $n = ActionNode::where('id', '=', $id)->firstOrFail();
+        foreach ($n->getOptionIds() as $option) {
+            $option->delete();
+        }
+        $n->delete();
     }
 
     public function storyDelete($id)

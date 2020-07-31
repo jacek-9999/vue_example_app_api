@@ -56,6 +56,10 @@ $router->group(['middleware' => 'cors'], function () use ($router) {
         '/node/{id}',
         'ActionNodeController@edit'
     );
+    $router->options(
+        '/node/{id}',
+        'ActionNodeController@delete'
+    );
     $router->delete(
         '/node/{id}',
         'ActionNodeController@delete'
