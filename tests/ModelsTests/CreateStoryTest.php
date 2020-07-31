@@ -98,7 +98,7 @@ class CreateStoryTest extends TestCase
             /*
              * Map  initialNode option to current node.
              */
-            $currentNode->setAsTarget($initialNode->addOption());
+            $currentNode->setAsTarget($initialNode->addOption()->id);
         }
 
         $descriptionsTextSecondLevel = [
@@ -140,10 +140,10 @@ class CreateStoryTest extends TestCase
                 /*
                  * Map previous created option to current node.
                  */
-                $currentNode->setAsTarget($optionId);
+                $currentNode->setAsTarget($optionId->id);
                 // creating option and mappings to next nodes from current
-                $finalNode->setAsTarget($currentNode->addOption());
-                $initialNode->setAsTarget($currentNode->addOption());
+                $finalNode->setAsTarget($currentNode->addOption()->id);
+                $initialNode->setAsTarget($currentNode->addOption()->id);
             }
         }
         /*
@@ -162,27 +162,16 @@ class CreateStoryTest extends TestCase
         /*
          * Test traversing nodes, intentionally without recursion for testing purposes.
          */
-        foreach ($initialNode->getOptions() as $optionL1) {
-            $this->assertTrue(in_array($optionL1->id, [1, 2, 3]));
-            $optionModel = ActionNodeOption::where('id', $optionL1->id)->first();
-            $mappingL1 =
-                $optionModel->getMapping();
-            $this->assertTrue(in_array($mappingL1, [3,4,5]));
-            $mappedNodeL1 = $optionModel->getTargetNode();
+        foreach ($initialNode->getOptions() as $targetNodeL1) {
             $this->assertTrue(in_array(
-                $mappedNodeL1->getDescription(),
+                $targetNodeL1['description'],
                 ['desc first lvl A',
                  'desc first lvl B',
                  'desc first lvl C']
             ));
-            foreach ($mappedNodeL1->getOptions() as $optionL2) {
-                $this->assertTrue(in_array($optionL2->id, [4,7,10,13,16,19]));
-                $optionModel = ActionNodeOption::where('id', $optionL2->id)->first();
-                $mappingL2 = $optionModel->getMapping();
-                $this->assertTrue(in_array($mappingL2, [6,7,8,9,10,11]));
-                $mappedNodeL2 = $optionModel->getTargetNode();
+            foreach (ActionNode::where('id', $targetNodeL1['id'])->first()->getOptions() as $targetNodeL2) {
                 $this->assertTrue(in_array(
-                    $mappedNodeL2->getDescription(),
+                    $targetNodeL2['description'],
                     ['desc sec lvl A_variant_1',
                      'desc sec lvl A_variant_2',
                      'desc sec lvl B_variant_1',
@@ -190,18 +179,9 @@ class CreateStoryTest extends TestCase
                      'desc sec lvl C_variant_1',
                      'desc sec lvl C_variant_2']
                 ));
-                foreach ($mappedNodeL2->getOptions() as $optionL3) {
-                    $this->assertTrue(in_array($optionL3->id, [5,6,8,9,11,12,14,15,17,18,20,21]));
-                    $optionModel = ActionNodeOption::where('id', $optionL3->id)->first();
-                    $mappingL3 = $optionModel->getMapping();
-                    /*
-                     * Last level nodes in this test are mapped to final or first node.
-                     * So there are only two options here.
-                     */
-                    $this->assertTrue(in_array($mappingL3, [1,2]));
-                    $mappedNodeL3 = $optionModel->getTargetNode();
+                foreach (ActionNode::where('id', $targetNodeL2['id'])->first()->getOptions() as $targetNodeL3) {
                     $this->assertTrue(in_array(
-                        $mappedNodeL3->getDescription(),
+                        $targetNodeL3['description'],
                         ['initial node description',
                          'final node description']
                     ));
