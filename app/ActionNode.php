@@ -139,27 +139,48 @@ class ActionNode extends BaseAction
         foreach ($stories as &$story) {
             $count = DB::select(DB::raw("SELECT story_id, COUNT(*) AS story_count FROM action_nodes WHERE story_id = $story->story_id AND deleted_at IS NULL GROUP BY story_id"));
             $story->story_count = $count[0]->story_count;
+            $story->nodes = self::getStoryNodes($story->story_id);
         }
         return $stories;
     }
 
     public static function getStoryNodes($id)
     {
-        return DB::table('action_nodes')
-            ->join(
-                self::$textTable,
-                self::$textTable.'.id',
-                '=',
-                'action_nodes.title_id')
+        $nodes = DB::table('action_nodes')
+//            ->join(
+//                self::$textTable,
+//                self::$textTable.'.id',
+//                '=',
+//                'action_nodes.title_id')
+//            ->join(
+//                self::$textTable,
+//                self::$textTable.'.id',
+//                '=',
+//                'action_nodes.description_id')
             ->where([
                 ['action_nodes.story_id', '=', $id],
                 ['action_nodes.deleted_at', '=', null]])
             ->select(
-                self::$textTable.'.description AS title',
+//                self::$textTable.'.description AS title',
+                'action_nodes.title_id',
+                'action_nodes.description_id',
                 'action_nodes.id',
                 'action_nodes.is_initial',
                 'action_nodes.is_final')
-            ->get();
+            ->get()->keyBy('id')->toArray();
+        foreach ($nodes as $k => &$node) {
+            $nodes[$k]->title = DB::table(self::$textTable)
+                ->select('description')
+                ->where(self::$textTable.'.id', $node->title_id)
+                ->first()->description;
+            unset($nodes[$k]->title_id);
+            $nodes[$k]->description = DB::table(self::$textTable)
+                ->select('description')
+                ->where(self::$textTable.'.id', $node->description_id)
+                ->first()->description;
+            unset($nodes[$k]->description_id);
+        }
+        return $nodes;
     }
 
     public function updateTitle($newTitle) {
