@@ -27,8 +27,8 @@ class GetStoriesTest extends TestCase
              $currentNode->save();
              $currentNode->setAsTarget($firstNode->addOption()->id);
         }
-        $validOutput = '[{"id":1,"story_id":1,"title":"initial node title","story_count":4,"nodes":[{"title":"initial node title","id":1,"is_initial":1,"is_final":0},{"title":"title:0","id":2,"is_initial":0,"is_final":0},{"title":"title:1","id":3,"is_initial":0,"is_final":0},{"title":"title:2","id":4,"is_initial":0,"is_final":0}]}]';
+        $validOutput = '[{"id":1,"story_id":1,"title":"initial node title","story_count":4,"nodes":{"1":{"id":1,"is_initial":1,"is_final":0,"title":"initial node title","description":"initial node description"},"2":{"id":2,"is_initial":0,"is_final":0,"title":"title:0","description":"desc:0"},"3":{"id":3,"is_initial":0,"is_final":0,"title":"title:1","description":"desc:1"},"4":{"id":4,"is_initial":0,"is_final":0,"title":"title:2","description":"desc:2"}}}]';
         $this->assertEquals($validOutput, json_encode(ActionNode::getStories()->toArray()));
-        $this->assertEquals(4, ActionNode::getStoryNodes(1)->count());
+        $this->assertEquals(4, count(ActionNode::getStoryNodes(1)));
     }
 }

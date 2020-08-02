@@ -26,6 +26,6 @@ class GetStoryNodesTest extends TestCase
              $currentNode->save();
              $currentNode->setAsTarget($firstNode->addOption()->id);
         }
-        $this->assertEquals(4, ActionNode::getStoryNodes(1)->count());
+        $this->assertEquals(4, count(ActionNode::getStoryNodes(1)));
     }
 }
