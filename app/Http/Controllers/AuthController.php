@@ -16,7 +16,9 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         if (!env('REGISTER_ENABLED')) {
-            throw new Exception('register is not allowed');
+            return response()->json( [
+                'result' => 'failed'
+            ], 403);
         }
         //validate incoming request
         $this->validate($request, [

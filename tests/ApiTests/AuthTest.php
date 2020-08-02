@@ -47,4 +47,24 @@ class AuthTest extends TestCase
         $r = json_decode($response->getContent(), true);
         $this->assertEquals('Unauthorized', $r['message']);
     }
+
+    public function testRegister()
+    {
+        $loginPayload = json_encode(
+            [
+                'username' => 'wrong_user',
+                'password' => 'Test1234',
+                'password_confirmation' => 'Test1234'
+            ]);
+        $response = $this
+            ->call(
+                'POST',
+                'register', [], [], [],
+                ['CONTENT_TYPE' => 'application/json'],
+                $loginPayload
+            );
+        $r = json_decode($response->getContent(), true);
+        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals('failed', $r['result']);
+    }
 }
