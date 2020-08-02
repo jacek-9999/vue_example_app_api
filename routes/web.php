@@ -11,9 +11,13 @@
 |
 */
 $router->group(['middleware' => 'cors'], function () use ($router) {
-    $router->get('/', function () use ($router) {
-        return $router->app->version();
+    $router->group(['middleware' => 'auth'], function ($router)
+    {
+        $router->get('me', 'AuthController@me');
     });
+
+    $router->post('register', 'AuthController@register');
+    $router->post('login', 'AuthController@login');
 
     $router->get(
         '/node/{id}',
