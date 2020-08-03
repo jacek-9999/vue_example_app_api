@@ -11,60 +11,27 @@
 |
 */
 $router->group(['middleware' => 'cors'], function () use ($router) {
-    $router->group(['middleware' => 'auth'], function ($router)
-    {
-        $router->get('me', 'AuthController@me');
-    });
-
     $router->post('register', 'AuthController@register');
-    $router->post('login', 'AuthController@login');
+    $router->options('login', 'AuthController@login');
+    $router->put('login', 'AuthController@login');
 
     $router->get(
         '/node/{id}',
         'ActionNodeController@read'
     );
-
     $router->get(
-        '/node_options/{id}',
-        'ActionNodeController@readOptions'
+        '/stories',
+        'ActionNodeController@getStoriesList'
     );
     $router->options(
         '/node',
         'ActionNodeController@create'
     );
-    $router->put(
-        '/node',
-        'ActionNodeController@create'
-    );
-
     $router->options(
         '/option',
         'ActionNodeController@addOption'
     );
-    $router->put(
-        '/option',
-        'ActionNodeController@addOption'
-    );
-
-    $router->post(
-        '/target',
-        'ActionNodeController@setTarget'
-    );
-
-    $router->get(
-        '/target/{optionId}',
-        'ActionNodeController@getOptionTarget'
-    );
-
-    $router->patch(
-        '/node/{id}',
-        'ActionNodeController@edit'
-    );
     $router->options(
-        '/node/{id}',
-        'ActionNodeController@delete'
-    );
-    $router->delete(
         '/node/{id}',
         'ActionNodeController@delete'
     );
@@ -72,33 +39,63 @@ $router->group(['middleware' => 'cors'], function () use ($router) {
         '/unlink_node',
         'ActionNodeController@unlinkNode'
     );
-    $router->patch(
-        '/unlink_node',
-        'ActionNodeController@unlinkNode'
-    );
     $router->options(
         '/stories',
         'ActionNodeController@getStoriesList'
     );
-    $router->get(
-        '/stories',
-        'ActionNodeController@getStoriesList'
+    $router->options(
+        '/story/{id}',
+        'ActionNodeController@storyDelete'
     );
+    $router->group(['middleware' => 'auth'], function ($router)
+    {
+        $router->get('me', 'AuthController@me');
+        $router->get(
+            '/node_options/{id}',
+            'ActionNodeController@readOptions'
+        );
+        $router->put(
+            '/node',
+            'ActionNodeController@create'
+        );
+        $router->put(
+            '/option',
+            'ActionNodeController@addOption'
+        );
 
-    $router->get(
-        '/story/{id}',
-        'ActionNodeController@getStory'
-    );
-    $router->delete(
-        '/story/{id}',
-        'ActionNodeController@storyDelete'
-    );
-    $router->options(
-        '/story/{id}',
-        'ActionNodeController@storyDelete'
-    );
-    $router->patch(
-        '/node/{id}',
-        'ActionNodeController@edit'
-    );
+        $router->post(
+            '/target',
+            'ActionNodeController@setTarget'
+        );
+
+        $router->get(
+            '/target/{optionId}',
+            'ActionNodeController@getOptionTarget'
+        );
+
+        $router->patch(
+            '/node/{id}',
+            'ActionNodeController@edit'
+        );
+        $router->delete(
+            '/node/{id}',
+            'ActionNodeController@delete'
+        );
+        $router->patch(
+            '/unlink_node',
+            'ActionNodeController@unlinkNode'
+        );
+        $router->get(
+            '/story/{id}',
+            'ActionNodeController@getStory'
+        );
+        $router->delete(
+            '/story/{id}',
+            'ActionNodeController@storyDelete'
+        );
+        $router->patch(
+            '/node/{id}',
+            'ActionNodeController@edit'
+        );
+    });
 });
