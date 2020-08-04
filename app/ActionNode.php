@@ -119,7 +119,7 @@ class ActionNode extends BaseAction
         return $out->description ?? '';
     }
 
-    public static function getStories()
+    public static function getStories($onlyIinitials = false)
     {
         $stories =  DB::table('action_nodes')
             ->join(
@@ -135,6 +135,9 @@ class ActionNode extends BaseAction
                 'action_nodes.story_id',
                 self::$textTable.'.description AS title')
             ->get();
+        if ($onlyIinitials) {
+            return $stories;
+        }
         // todo: optimize query without loop
         foreach ($stories as &$story) {
             $count = DB::select(DB::raw("SELECT story_id, COUNT(*) AS story_count FROM action_nodes WHERE story_id = $story->story_id AND deleted_at IS NULL GROUP BY story_id"));

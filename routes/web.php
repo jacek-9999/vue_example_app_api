@@ -20,19 +20,27 @@ $router->group(['middleware' => 'cors'], function () use ($router) {
         'ActionNodeController@read'
     );
     $router->get(
-        '/stories',
-        'ActionNodeController@getStoriesList'
-    );
-    $router->options(
-        '/stories',
-        'ActionNodeController@getStoriesList'
-    );
-    $router->get(
         '/story/{id}',
         'ActionNodeController@getStory'
     );
+    $router->get(
+        '/games',
+        'ActionNodeController@getGamesList'
+    );
+    $router->options(
+        '/games',
+        'ActionNodeController@getGamesList'
+    );
     $router->group(['middleware' => 'auth'], function ($router)
     {
+        $router->get(
+            '/stories',
+            'ActionNodeController@getStoriesList'
+        );
+        $router->options(
+            '/stories',
+            'ActionNodeController@getStoriesList'
+        );
         $router->options(
             '/node',
             'ActionNodeController@create'

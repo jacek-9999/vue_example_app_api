@@ -139,6 +139,17 @@ class ActionNodeController extends Controller
         return response()->json($resp);
     }
 
+    /*
+     * In getStoriesList we have returned stories list with full node list.
+     * Its useful when editing. But in when playing saved story w need only firs node
+     * to start.
+     */
+    public function getGamesList()
+    {
+        $resp = ActionNode::getStories(true);
+        return response()->json($resp);
+    }
+
     public function getStory($id)
     {
         $resp = ActionNode::getStoryNodes($id);
