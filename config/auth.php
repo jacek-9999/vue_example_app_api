@@ -7,9 +7,15 @@ return [
     ],
 
     'guards' => [
+        'web' => [
+            'driver' => 'jwt',
+            'provider' => 'users',
+            'hash' => True,
+        ],
         'api' => [
             'driver' => 'jwt',
             'provider' => 'users',
+            'hash' => True,
         ],
     ],
 

@@ -66,15 +66,4 @@ class AuthController extends Controller
         }
         return $this->respondWithToken($token);
     }
-
-    /**
-     * Get user details.
-     *
-     * @param  Request  $request
-     * @return Response
-     */
-    public function me()
-    {
-        return response()->json(auth()->user());
-    }
 }

@@ -24,32 +24,35 @@ $router->group(['middleware' => 'cors'], function () use ($router) {
         'ActionNodeController@getStoriesList'
     );
     $router->options(
-        '/node',
-        'ActionNodeController@create'
-    );
-    $router->options(
-        '/option',
-        'ActionNodeController@addOption'
-    );
-    $router->options(
-        '/node/{id}',
-        'ActionNodeController@delete'
-    );
-    $router->options(
-        '/unlink_node',
-        'ActionNodeController@unlinkNode'
-    );
-    $router->options(
         '/stories',
         'ActionNodeController@getStoriesList'
     );
-    $router->options(
+    $router->get(
         '/story/{id}',
-        'ActionNodeController@storyDelete'
+        'ActionNodeController@getStory'
     );
     $router->group(['middleware' => 'auth'], function ($router)
     {
-        $router->get('me', 'AuthController@me');
+        $router->options(
+            '/node',
+            'ActionNodeController@create'
+        );
+        $router->options(
+            '/option',
+            'ActionNodeController@addOption'
+        );
+        $router->options(
+            '/node/{id}',
+            'ActionNodeController@delete'
+        );
+        $router->options(
+            '/unlink_node',
+            'ActionNodeController@unlinkNode'
+        );
+        $router->options(
+            '/story/{id}',
+            'ActionNodeController@storyDelete'
+        );
         $router->get(
             '/node_options/{id}',
             'ActionNodeController@readOptions'
@@ -84,10 +87,6 @@ $router->group(['middleware' => 'cors'], function () use ($router) {
         $router->patch(
             '/unlink_node',
             'ActionNodeController@unlinkNode'
-        );
-        $router->get(
-            '/story/{id}',
-            'ActionNodeController@getStory'
         );
         $router->delete(
             '/story/{id}',
