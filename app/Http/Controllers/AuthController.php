@@ -60,7 +60,7 @@ class AuthController extends Controller
         ]);
 
         $credentials = $request->only(['username', 'password']);
-
+        // config()->set('jwt.ttl', 1); minutes
         if (! $token = Auth::attempt($credentials)) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
