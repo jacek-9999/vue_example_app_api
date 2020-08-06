@@ -9,9 +9,7 @@ class Controller extends BaseController
     public function respondWithToken($token)
     {
         return response()->json([
-            'token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => 60
+            'token' => $token
         ], 200);
     }
 }

@@ -18,7 +18,7 @@ class AuthTest extends TestCase
         $loginPayload = json_encode(['username' => 'test_user', 'password' => 'Test1234']);
         $response = $this
             ->call(
-                'POST',
+                'PUT',
                 'login', [], [], [],
                 ['CONTENT_TYPE' => 'application/json'],
                 $loginPayload
@@ -26,12 +26,12 @@ class AuthTest extends TestCase
         $r = json_decode($response->getContent(), true);
         $this->assertTrue(isset($r['token']));
         $this->assertTrue(strlen($r['token']) > 40);
-        $this->assertEquals('bearer', $r['token_type']);
         $payload = json_decode(substr(base64_decode($r['token']), 27, 168), 1);
         $this->assertEquals('http://localhost/login', $payload['iss']);
-        $this->assertEquals(0,$payload['iat'] - time());
-        $this->assertEquals(3600,$payload['exp'] - time());//3600sec / 60 min = 1hr
-        $this->assertEquals(0,$payload['nbf'] - time());
+        $current = time();
+        $this->assertEquals(0,$payload['iat'] - $current);
+        $this->assertEquals(3600,$payload['exp'] - $current);//3600sec / 60 min = 1hr
+        $this->assertEquals(0,$payload['nbf'] - $current);
     }
 
     public function testLoginInValid()
@@ -39,7 +39,7 @@ class AuthTest extends TestCase
         $loginPayload = json_encode(['username' => 'wrong_user', 'password' => 'Test1234']);
         $response = $this
             ->call(
-                'POST',
+                'PUT',
                 'login', [], [], [],
                 ['CONTENT_TYPE' => 'application/json'],
                 $loginPayload
