@@ -45,12 +45,6 @@ class AuthController extends Controller
         }
     }
 
-    /**
-     * Get a JWT via given credentials.
-     *
-     * @param  Request  $request
-     * @return Response
-     */
     public function login(Request $request)
     {
         //validate incoming request
@@ -60,7 +54,6 @@ class AuthController extends Controller
         ]);
 
         $credentials = $request->only(['username', 'password']);
-        // config()->set('jwt.ttl', 1); minutes
         if (! $token = Auth::attempt($credentials)) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }

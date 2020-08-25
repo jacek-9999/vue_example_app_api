@@ -150,21 +150,10 @@ class ActionNode extends BaseAction
     public static function getStoryNodes($id)
     {
         $nodes = DB::table('action_nodes')
-//            ->join(
-//                self::$textTable,
-//                self::$textTable.'.id',
-//                '=',
-//                'action_nodes.title_id')
-//            ->join(
-//                self::$textTable,
-//                self::$textTable.'.id',
-//                '=',
-//                'action_nodes.description_id')
             ->where([
                 ['action_nodes.story_id', '=', $id],
                 ['action_nodes.deleted_at', '=', null]])
             ->select(
-//                self::$textTable.'.description AS title',
                 'action_nodes.title_id',
                 'action_nodes.description_id',
                 'action_nodes.id',
